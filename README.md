@@ -4,7 +4,7 @@ TERA-Guide
 
 All-In-One Dungeon Guides, SCRIPTED BY TAMAOU
 ------
-## Commands / Команды
+## Commands
 Toolbox(/8) | Command description | Default
 --- | --- | ---
 **guides** | Module on/off	|	Enabled
@@ -12,7 +12,7 @@ Toolbox(/8) | Command description | Default
 **guide streamenabled**	|	Stream Mode	|	Disabled
 **guide itemhelper**	|	Spawn Markings/Signs	|	Enabled
 
-## Supported dungeons / Поддерживаемые данжи
+## Supported dungeons
 Dungeon name | Status
 --- | ---
 Corrupted Skynest | Completed
