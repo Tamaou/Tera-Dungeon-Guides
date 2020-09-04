@@ -8,9 +8,9 @@ All-In-One Dungeon Guides, SCRIPTED BY TAMAOU
 Toolbox(/8) | Command description | Default
 --- | --- | ---
 **guides** | Module on/off	|	Enabled
-**guide party**	|	Send To Party	|	Disabled
-**guide streamenabled**	|	Stream Mode	|	Disabled
-**guide itemhelper**	|	Spawn Markings/Signs	|	Enabled
+**guides party**	|	Send To Party	|	Disabled
+**guides streamenabled**	|	Stream Mode	|	Disabled
+**guides itemhelper**	|	Spawn Markings/Signs	|	Enabled
 
 ## Supported dungeons
 Dungeon name | Status
