@@ -1,0 +1,11 @@
+{
+    "disableAutoUpdate": false,
+    "name": "Tera-Dungeon-Guides",
+    "author": "Tamaou",
+    "description": "Guides for Tera Dungeons",
+    "options": {
+        "niceName": "TDN(Guides)"
+    },
+    "servers": ["https://raw.githubusercontent.com/Tamaou/Tera-Dungeon-Guides/master/"],
+    "supportUrl": "https://github.com/Tamaou/Tera-Dungeon-Guides/issues"
+}
