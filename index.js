@@ -195,7 +195,7 @@ module.exports = function TeraDungeonGuides(mod) {
 
                 if (whichmode == 1 && whichboss == 1 && KelsaikAction[skillid]) {
                     sendMessage(KelsaikAction[skillid].msg);
-                    if (config.itemhelper && KelsaikAction[skill].mark_interval !== undefined) {
+                    if (config.itemhelper && KelsaikAction[skillid].mark_interval !== undefined) {
                         bossCurLocation = event.loc;
                         bossCurAngle = event.w;
                         SpawnitemCircle(MarkerItem, KelsaikAction[skillid].mark_interval, KelsaikAction[skillid].mark_distance, 9000);
@@ -235,21 +235,21 @@ module.exports = function TeraDungeonGuides(mod) {
 
                 if (whichmode == 6 && whichboss == 1 && DraakonAction[skillid]) {
                     sendMessage(DraakonAction[skillid].msg);
-                    if (itemhelper && typeof DraakonAction[skill].sign_degrees !== "undefined" && typeof DraakonAction[skill].sign2_degrees !== "undefined") {
+                    if (itemhelper && typeof DraakonAction[skillid].sign_degrees !== "undefined" && typeof DraakonAction[skillid].sign2_degrees !== "undefined") {
                         bossCurLocation = event.loc;
                         bossCurAngle = event.w;
-                        SpawnThing(DraakonAction[skill].sign_degrees, DraakonAction[skill].sign_distance)
-                        SpawnThing2(DraakonAction[skill].sign2_degrees, DraakonAction[skill].sign2_distance)
+                        SpawnThing(DraakonAction[skillid].sign_degrees, DraakonAction[skillid].sign_distance)
+                        SpawnThing2(DraakonAction[skillid].sign2_degrees, DraakonAction[skillid].sign2_distance)
                     }
                 }
 
                 if (whichmode == 7 && whichboss == 1 && DraakonAction[skillid]) {
                     sendMessage(DraakonAction[skillid].msg);
-                    if (itemhelper && typeof DraakonAction[skill].sign_degrees !== "undefined" && typeof DraakonAction[skill].sign2_degrees !== "undefined") {
+                    if (itemhelper && typeof DraakonAction[skillid].sign_degrees !== "undefined" && typeof DraakonAction[skillid].sign2_degrees !== "undefined") {
                         bossCurLocation = event.loc;
                         bossCurAngle = event.w;
-                        SpawnThing(DraakonAction[skill].sign_degrees, DraakonAction[skill].sign_distance)
-                        SpawnThing2(DraakonAction[skill].sign2_degrees, DraakonAction[skill].sign2_distance)
+                        SpawnThing(DraakonAction[skillid].sign_degrees, DraakonAction[skillid].sign_distance)
+                        SpawnThing2(DraakonAction[skillid].sign2_degrees, DraakonAction[skillid].sign2_distance)
                     }
                 }
             }
