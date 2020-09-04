@@ -198,16 +198,16 @@ module.exports = function TeraDungeonGuides(mod) {
                     if (config.itemhelper && KelsaikAction[skill].mark_interval !== undefined) {
                         bossCurLocation = event.loc;
                         bossCurAngle = event.w;
-                        SpawnitemCircle(MarkerItem, KelsaikAction[skill].mark_interval, KelsaikAction[skill].mark_distance, 9000);
+                        SpawnitemCircle(MarkerItem, KelsaikAction[skillid].mark_interval, KelsaikAction[skillid].mark_distance, 9000);
                     }
                 }
 
                 if (whichmode == 2 && whichboss == 1 && KelsaikAction[skillid]) {
                     sendMessage(KelsaikAction[skillid].msg);
-                    if (config.itemhelper && KelsaikAction[skill].mark_interval !== undefined) {
+                    if (config.itemhelper && KelsaikAction[skillid].mark_interval !== undefined) {
                         bossCurLocation = event.loc;
                         bossCurAngle = event.w;
-                        SpawnitemCircle(MarkerItem, KelsaikAction[skill].mark_interval, KelsaikAction[skill].mark_distance, 9000);
+                        SpawnitemCircle(MarkerItem, KelsaikAction[skillid].mark_interval, KelsaikAction[skillid].mark_distance, 9000);
                     }
                 }
 
