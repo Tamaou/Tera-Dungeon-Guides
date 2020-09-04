@@ -4,13 +4,15 @@ TERA-Guide
 
 All-In-One Dungeon Guides, SCRIPTED BY TAMAOU
 ------
+Calls Out Boss Attacks
+-----
 ## Commands
 Toolbox(/8) | Command description | Default
 --- | --- | ---
 **guides** | Module on/off	|	Enabled
+**guides itemhelper**	|	Spawn Markings/Signs	|	Enabled
 **guides party**	|	Send To Party	|	Disabled
 **guides streamenabled**	|	Stream Mode	|	Disabled
-**guides itemhelper**	|	Spawn Markings/Signs	|	Enabled
 
 ## Supported dungeons
 Dungeon name | Status
