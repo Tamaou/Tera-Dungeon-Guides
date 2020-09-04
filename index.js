@@ -23,8 +23,6 @@ module.exports = function TeraDungeonGuides(mod) {
         bossCurAngle,
         uid0 = 999999999,
         uid1 = 899999999,
-        uid2 = 799999999,
-        uid3 = 699999999,
         notice = true,
         power = false,
         Level = 0,
@@ -195,7 +193,7 @@ module.exports = function TeraDungeonGuides(mod) {
 
                 if (whichmode == 1 && whichboss == 1 && KelsaikAction[skillid]) {
                     sendMessage(KelsaikAction[skillid].msg);
-                    if (config.itemhelper && KelsaikAction[skillid].mark_interval !== undefined) {
+                    if (itemhelper && KelsaikAction[skillid].mark_interval !== undefined) {
                         bossCurLocation = event.loc;
                         bossCurAngle = event.w;
                         SpawnitemCircle(MarkerItem, KelsaikAction[skillid].mark_interval, KelsaikAction[skillid].mark_distance, 9000);
@@ -204,7 +202,7 @@ module.exports = function TeraDungeonGuides(mod) {
 
                 if (whichmode == 2 && whichboss == 1 && KelsaikAction[skillid]) {
                     sendMessage(KelsaikAction[skillid].msg);
-                    if (config.itemhelper && KelsaikAction[skillid].mark_interval !== undefined) {
+                    if (itemhelper && KelsaikAction[skillid].mark_interval !== undefined) {
                         bossCurLocation = event.loc;
                         bossCurAngle = event.w;
                         SpawnitemCircle(MarkerItem, KelsaikAction[skillid].mark_interval, KelsaikAction[skillid].mark_distance, 9000);
@@ -239,7 +237,7 @@ module.exports = function TeraDungeonGuides(mod) {
                         bossCurLocation = event.loc;
                         bossCurAngle = event.w;
                         SpawnThing(DraakonAction[skillid].sign_degrees, DraakonAction[skillid].sign_distance)
-                        SpawnThing2(DraakonAction[skillid].sign2_degrees, DraakonAction[skillid].sign2_distance)
+                        SpawnThing(DraakonAction[skillid].sign2_degrees, DraakonAction[skillid].sign2_distance)
                     }
                 }
 
@@ -249,7 +247,7 @@ module.exports = function TeraDungeonGuides(mod) {
                         bossCurLocation = event.loc;
                         bossCurAngle = event.w;
                         SpawnThing(DraakonAction[skillid].sign_degrees, DraakonAction[skillid].sign_distance)
-                        SpawnThing2(DraakonAction[skillid].sign2_degrees, DraakonAction[skillid].sign2_distance)
+                        SpawnThing(DraakonAction[skillid].sign2_degrees, DraakonAction[skillid].sign2_distance)
                     }
                 }
             }
@@ -296,49 +294,6 @@ module.exports = function TeraDungeonGuides(mod) {
         });
         mod.toClient('S_DESPAWN_DROPITEM', 4, {
             gameId: uid0_arg2
-        });
-    }
-
-    function SpawnThing2(degrees, radius) {
-        let r = null, rads = null, finalrad = null, pos = null;
-        r = bossCurAngle - Math.PI;
-        rads = (degrees * Math.PI / 180);
-        finalrad = r - rads;
-        bossCurLocation.x = bossCurLocation.x + radius * Math.cos(finalrad);
-        bossCurLocation.y = bossCurLocation.y + radius * Math.sin(finalrad);
-
-        mod.toClient('S_SPAWN_BUILD_OBJECT', 2, {
-            gameId: uid2,
-            itemId: 1,
-            loc: bossCurLocation,
-            w: r,
-            unk: 0,
-            ownerName: 'SAFE SPOT',
-            message: 'SAFE'
-        });
-
-        setTimeout(DespawnThing2, 5000, uid2, uid3);
-        uid2--;
-        //bossCurLocation.z = bossCurLocation.z - 100;
-        mod.toClient('S_SPAWN_DROPITEM', 8, {
-            gameId: uid3,
-            loc: bossCurLocation,
-            item: 88850,
-            amount: 1,
-            expiry: 6000,
-            owners: [{ playerId: uid3 }],
-            ownerName: "DG-GUIDE"
-        });
-        uid3++;
-    }
-
-    function DespawnThing2(uid1_arg, uid1_arg2) {
-        mod.toClient('S_DESPAWN_BUILD_OBJECT', 2, {
-            gameId: uid1_arg,
-            //unk : 0
-        });
-        mod.toClient('S_DESPAWN_DROPITEM', 4, {
-            gameId: uid1_arg2
         });
     }
 

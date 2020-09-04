@@ -33,7 +33,7 @@ module.exports = {
         212: { msg: 'Inner FIRE', mark_interval: 10, mark_distance: 400 },
         213: { msg: 'Inner ICE', mark_interval: 10, mark_distance: 400 },
         214: { msg: 'Inner ICE', mark_interval: 10, mark_distance: 400 },
-        215: { msg: 'Inner FIRE', mark_interval: 10, mark_distance: 400 },
+        215: { msg: 'Inner FIRE', mark_interval: 10, mark_distance: 400 }
     }, HagufnaAction : {
         108: { msg: 'Overhand Strike(Slow)' },
         109: { msg: 'Forward Jump → Overhand Strike' },

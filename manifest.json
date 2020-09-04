@@ -2,9 +2,9 @@
     "files": {
         "README.md": "5ab26d8807c837e60ee34ede4512fc806df9bfe2f269b61b321bc7d193c7b54e",
         "config.json": "7a4dcf2d5b344997132bf6700847e665019d7442ab21dd6fddae8da505354049",
-        "index.js": "2d685bc8df9cb792026986bbf85fa6f9e3b6818902d57455890423de08131795",
+        "index.js": "2112425aa008dec3ba7cb4bc826d25947454665b791efc68aae7db76ba87da88",
         "module.json": "7cdcb32bd3b539cb3e86090cd37172ea5811ef5d5edfebfcd5264b1c0b5738c0",
-        "skillsList.js": "b368e2434a709704056b93579dd4236461544213325cdb5985a2d55a55e96860"
+        "skillsList.js": "def06c4c5745afaa7ff3db836958cab9fe20285312e2e7dac9dffe132c849b53"
     },
     "defs": {
         "C_CHAT": 1,
