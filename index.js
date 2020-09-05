@@ -3,11 +3,11 @@ String.prototype.clr = function (hexColor) { return `<font color="#${hexColor}">
 const Vec3 = require('tera-vec3'),
     mapID = [3026, 3126, 3027, 3103, 3203, 3102, 3202], //[CSNM, CSHM, Hagufna, Undying Warlord, Nightmare Undying Warlord, DANM, DAHM]
     HuntingZn = [3026, 3126, 3027, 3103, 3203, 3102, 3202], //[CSNM, CSHM, Hagufna, Undying Warlord, Nightmare Undying Warlord, DANM, DAHM]
-    {KelsaikAction, HagufnaAction, UndyingWarlordAction, DraakonAction} = require('./skillsList'),
+    { KelsaikAction, HagufnaAction, UndyingWarlordAction, DraakonAction } = require('./skillsList'),
     config = require('./config.json'),
     MarkerItem = 553,
     BossID = [1000, 2000, 3000];
-    
+
 module.exports = function TeraDungeonGuides(mod) {
     let enabled = config.enabled,
         sendToParty = config.sendToParty,
@@ -21,8 +21,8 @@ module.exports = function TeraDungeonGuides(mod) {
         hooks = [],
         bossCurLocation,
         bossCurAngle,
-        uid0 = 999999999,
-        uid1 = 899999999,
+        uid1 = 999999999,
+        uid2 = 899999999,
         notice = true,
         power = false,
         Level = 0,
@@ -127,6 +127,91 @@ module.exports = function TeraDungeonGuides(mod) {
         else unload();
     }
 
+    function SpawnThing(degrees, radius) {
+        let r = null, rads = null, finalrad = null, pos = null;
+        r = bossCurAngle - Math.PI;
+        rads = (degrees * Math.PI / 180);
+        finalrad = r - rads;
+        bossCurLocation.x = bossCurLocation.x + radius * Math.cos(finalrad);
+        bossCurLocation.y = bossCurLocation.y + radius * Math.sin(finalrad);
+
+        mod.toClient('S_SPAWN_BUILD_OBJECT', 2, {
+            gameId: uid1,
+            itemId: 1,
+            loc: bossCurLocation,
+            w: r,
+            unk: 0,
+            ownerName: 'SAFE SPOT',
+            message: 'SAFE'
+        });
+
+        setTimeout(DespawnThing, 5000, uid1, uid2);
+        uid1--;
+        //bossCurLocation.z = bossCurLocation.z - 100;
+        mod.toClient('S_SPAWN_DROPITEM', 8, {
+            gameId: uid2,
+            loc: bossCurLocation,
+            item: 88850,
+            amount: 1,
+            expiry: 6000,
+            owners: [{ playerId: uid2 }],
+            ownerName: "DG-GUIDE"
+        });
+        uid2++;
+    }
+
+    function DespawnThing(uid1_arg, uid1_arg2) {
+        mod.toClient('S_DESPAWN_BUILD_OBJECT', 2, {
+            gameId: uid1_arg,
+            //unk : 0
+        });
+        mod.toClient('S_DESPAWN_DROPITEM', 4, {
+            gameId: uid1_arg2
+        });
+    }
+
+    function Spawnitem(item, angle, radius, lifetime) {
+        let r = null, rads = null, finalrad = null, pos = {};
+
+        r = bossCurAngle - Math.PI;
+        finalrad = r - angle;
+        pos.x = bossCurLocation.x + radius * Math.cos(finalrad);
+        pos.y = bossCurLocation.y + radius * Math.sin(finalrad);
+        pos.z = bossCurLocation.z;
+
+        mod.send('S_SPAWN_COLLECTION', 4, {
+            gameId: uid1,
+            id: item,
+            amount: 1,
+            loc: pos,
+            w: r,
+            unk1: 0,
+            unk2: 0
+        });
+
+        setTimeout(Despawn, lifetime, uid1);
+        uid1--;
+    }
+
+    function Despawn(uid1_arg) {
+        mod.send('S_DESPAWN_COLLECTION', 2, {
+            gameId: uid1_arg
+        });
+    }
+
+    function SpawnitemCircle(item, intervalDegrees, radius, lifetime, shift_distance, shift_angle) {
+        if (shift_angle) {
+            bossCurAngle = (bossCurAngle - Math.PI) - (shift_angle * (Math.PI / 180));
+        }
+        if (shift_distance) {
+            bossCurLocation.x = bossCurLocation.x + shift_distance * Math.cos(bossCurAngle);
+            bossCurLocation.y = bossCurLocation.y + shift_distance * Math.sin(bossCurAngle);
+        }
+        for (var angle = -Math.PI; angle <= Math.PI; angle += Math.PI * intervalDegrees / 180) {
+            Spawnitem(item, angle, radius, lifetime);
+        }
+    }
+
     function load() {
         if (!hooks.length) {
             hook('S_BOSS_GAGE_INFO', 3, sBossGageInfo);
@@ -193,7 +278,7 @@ module.exports = function TeraDungeonGuides(mod) {
 
                 if (whichmode == 1 && whichboss == 1 && KelsaikAction[skillid]) {
                     sendMessage(KelsaikAction[skillid].msg);
-                    if (itemhelper && KelsaikAction[skillid].mark_interval !== undefined) {
+                    if (KelsaikAction[skillid].mark_interval !== undefined) {
                         bossCurLocation = event.loc;
                         bossCurAngle = event.w;
                         SpawnitemCircle(MarkerItem, KelsaikAction[skillid].mark_interval, KelsaikAction[skillid].mark_distance, 9000);
@@ -202,7 +287,7 @@ module.exports = function TeraDungeonGuides(mod) {
 
                 if (whichmode == 2 && whichboss == 1 && KelsaikAction[skillid]) {
                     sendMessage(KelsaikAction[skillid].msg);
-                    if (itemhelper && KelsaikAction[skillid].mark_interval !== undefined) {
+                    if (KelsaikAction[skillid].mark_interval !== undefined) {
                         bossCurLocation = event.loc;
                         bossCurAngle = event.w;
                         SpawnitemCircle(MarkerItem, KelsaikAction[skillid].mark_interval, KelsaikAction[skillid].mark_distance, 9000);
@@ -215,25 +300,27 @@ module.exports = function TeraDungeonGuides(mod) {
 
                 if (whichmode == 4 && whichboss == 1 && UndyingWarlordAction[skillid]) {
                     sendMessage(UndyingWarlordAction[skillid].msg);
-                    if (UndyingWarlordAction[skillid].mark_interval !== undefined) {
+                    if (UndyingWarlordAction[skillid].mark_interval !== undefined && UndyingWarlordAction[skillid].mark2_interval !== undefined) {
                         bossCurLocation = event.loc;
                         bossCurAngle = event.w;
                         SpawnitemCircle(MarkerItem, UndyingWarlordAction[skillid].mark_interval, UndyingWarlordAction[skillid].mark_distance, 9000);
+                        SpawnitemCircle(MarkerItem, UndyingWarlordAction[skillid].mark2_interval, UndyingWarlordAction[skillid].mark2_distance, 9000);
                     }
                 }
 
                 if (whichmode == 5 && whichboss == 1 && UndyingWarlordAction[skillid]) {
                     sendMessage(UndyingWarlordAction[skillid].msg);
-                    if (UndyingWarlordAction[skillid].mark_interval !== undefined) {
+                    if (UndyingWarlordAction[skillid].mark_interval !== undefined && UndyingWarlordAction[skillid].mark2_interval !== undefined) {
                         bossCurLocation = event.loc;
                         bossCurAngle = event.w;
                         SpawnitemCircle(MarkerItem, UndyingWarlordAction[skillid].mark_interval, UndyingWarlordAction[skillid].mark_distance, 9000);
+                        SpawnitemCircle(MarkerItem, UndyingWarlordAction[skillid].mark2_interval, UndyingWarlordAction[skillid].mark2_distance, 9000);
                     }
                 }
 
                 if (whichmode == 6 && whichboss == 1 && DraakonAction[skillid]) {
                     sendMessage(DraakonAction[skillid].msg);
-                    if (itemhelper && typeof DraakonAction[skillid].sign_degrees !== "undefined" && typeof DraakonAction[skillid].sign2_degrees !== "undefined") {
+                    if (DraakonAction[skillid].sign_degrees !== undefined && DraakonAction[skillid].sign2_degrees !== undefined) {
                         bossCurLocation = event.loc;
                         bossCurAngle = event.w;
                         SpawnThing(DraakonAction[skillid].sign_degrees, DraakonAction[skillid].sign_distance)
@@ -243,7 +330,7 @@ module.exports = function TeraDungeonGuides(mod) {
 
                 if (whichmode == 7 && whichboss == 1 && DraakonAction[skillid]) {
                     sendMessage(DraakonAction[skillid].msg);
-                    if (itemhelper && typeof DraakonAction[skillid].sign_degrees !== "undefined" && typeof DraakonAction[skillid].sign2_degrees !== "undefined") {
+                    if (DraakonAction[skillid].sign_degrees !== undefined && DraakonAction[skillid].sign2_degrees !== undefined) {
                         bossCurLocation = event.loc;
                         bossCurAngle = event.w;
                         SpawnThing(DraakonAction[skillid].sign_degrees, DraakonAction[skillid].sign_distance)
@@ -251,91 +338,6 @@ module.exports = function TeraDungeonGuides(mod) {
                     }
                 }
             }
-        }
-    }
-
-    function SpawnThing(degrees, radius) {
-        let r = null, rads = null, finalrad = null, pos = null;
-        r = bossCurAngle - Math.PI;
-        rads = (degrees * Math.PI / 180);
-        finalrad = r - rads;
-        bossCurLocation.x = bossCurLocation.x + radius * Math.cos(finalrad);
-        bossCurLocation.y = bossCurLocation.y + radius * Math.sin(finalrad);
-
-        mod.toClient('S_SPAWN_BUILD_OBJECT', 2, {
-            gameId: uid0,
-            itemId: 1,
-            loc: bossCurLocation,
-            w: r,
-            unk: 0,
-            ownerName: 'SAFE SPOT',
-            message: 'SAFE'
-        });
-
-        setTimeout(DespawnThing, 5000, uid0, uid1);
-        uid0--;
-        //bossCurLocation.z = bossCurLocation.z - 100;
-        mod.toClient('S_SPAWN_DROPITEM', 8, {
-            gameId: uid1,
-            loc: bossCurLocation,
-            item: 88850,
-            amount: 1,
-            expiry: 6000,
-            owners: [{ playerId: uid1 }],
-            ownerName: "DG-GUIDE"
-        });
-        uid1++;
-    }
-
-    function DespawnThing(uid0_arg, uid0_arg2) {
-        mod.toClient('S_DESPAWN_BUILD_OBJECT', 2, {
-            gameId: uid0_arg,
-            //unk : 0
-        });
-        mod.toClient('S_DESPAWN_DROPITEM', 4, {
-            gameId: uid0_arg2
-        });
-    }
-
-    function Spawnitem(item, angle, radius, lifetime) {
-        let r = null, rads = null, finalrad = null, pos = {};
-
-        r = bossCurAngle - Math.PI;
-        finalrad = r - angle;
-        pos.x = bossCurLocation.x + radius * Math.cos(finalrad);
-        pos.y = bossCurLocation.y + radius * Math.sin(finalrad);
-        pos.z = bossCurLocation.z;
-
-        mod.send('S_SPAWN_COLLECTION', 4, {
-            gameId: uid0,
-            id: item,
-            amount: 1,
-            loc: pos,
-            w: r,
-            unk1: 0,
-            unk2: 0
-        });
-
-        setTimeout(Despawn, lifetime, uid0);
-        uid0--;
-    }
-
-    function Despawn(uid_arg0) {
-        mod.send('S_DESPAWN_COLLECTION', 2, {
-            gameId: uid_arg0
-        });
-    }
-
-    function SpawnitemCircle(item, intervalDegrees, radius, lifetime, shift_distance, shift_angle) {
-        if (shift_angle) {
-            bossCurAngle = (bossCurAngle - Math.PI) - (shift_angle * (Math.PI / 180));
-        }
-        if (shift_distance) {
-            bossCurLocation.x = bossCurLocation.x + shift_distance * Math.cos(bossCurAngle);
-            bossCurLocation.y = bossCurLocation.y + shift_distance * Math.sin(bossCurAngle);
-        }
-        for (var angle = -Math.PI; angle <= Math.PI; angle += Math.PI * intervalDegrees / 180) {
-            Spawnitem(item, angle, radius, lifetime);
         }
     }
 

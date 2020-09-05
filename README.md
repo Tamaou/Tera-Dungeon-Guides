@@ -21,7 +21,7 @@ Corrupted Skynest | Completed
 Corrupted Skynest (Hard) | Completed
 Draakon Arena | Testing
 Draakon Arena (Hard) | Testing
-Forbidden Arena [Hagufna] | Completed
+Forbidden Arena [Hagufna] | To Be Improved
 Forbidden Arena [Undying Warlord] | Completed
 Forbidden Arena [Nightmare Undying Warlord]| Completed
 

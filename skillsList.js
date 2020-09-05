@@ -1,5 +1,5 @@
 module.exports = {
-    KelsaikAction : {
+    KelsaikAction: {
         //101: {msg: 'Claw Attack'},
         102: { msg: 'Front Ice Blast (Get Awaay)' },
         103: { msg: 'Tail Whip (KNOCK-UP)' },
@@ -34,7 +34,7 @@ module.exports = {
         213: { msg: 'Inner ICE', mark_interval: 10, mark_distance: 400 },
         214: { msg: 'Inner ICE', mark_interval: 10, mark_distance: 400 },
         215: { msg: 'Inner FIRE', mark_interval: 10, mark_distance: 400 }
-    }, HagufnaAction : {
+    }, HagufnaAction: {
         108: { msg: 'Overhand Strike(Slow)' },
         109: { msg: 'Forward Jump → Overhand Strike' },
         111: { msg: 'Dizziness' },
@@ -55,7 +55,7 @@ module.exports = {
         356: { msg: 'Flash(Rolling)' },
         357: { msg: 'Purple → Wave (Get Away)' },
         401: { msg: 'Boss HP 30% → AOE (Iframe / Warp Barrier)' }
-    }, UndyingWarlordAction : {
+    }, UndyingWarlordAction: {
         // 101: { msg: 'Right Hook' },
         // 102: { msg: 'Spin Left Hook' },
         // 107: { msg: 'Uppercut'},
@@ -82,15 +82,15 @@ module.exports = {
         // 154: { msg: 'Roundhouse Kick' },
         155: { msg: 'Ground Stomp (Knock-Up / Iframe)' },
         302: { msg: 'Boss Charging' },
-        303: { msg: 'DONUT Incoming(TAKE NOTE)', mark_interval: 10, mark_distance: 300 },
-        304: { msg: 'DONUT Incoming (TAKE NOTE)', mark_interval: 10, mark_distance: 300 },
+        303: { msg: 'DONUT Incoming(TAKE NOTE)', mark_interval: 10, mark_distance: 250, mark2_interval: 10, mark2_distance: 600 },
+        304: { msg: 'DONUT Incoming (TAKE NOTE)', mark_interval: 10, mark_distance: 250, mark2_interval: 10, mark2_distance: 600 },
         305: { msg: 'Target Lock(Jumping)' },
         307: { msg: 'Charge Complete > Jumping to Target' },
         309: { msg: 'Boss Grab' },
         310: { msg: 'Jump Backwards' },
         313: { msg: 'Jump > Slam' },
         314: { msg: 'AOE(Explosion)' },
-    }, DraakonAction : {
+    }, DraakonAction: {
         101: { msg: 'Double Slash (Block)' },
         103: { msg: 'Cross Slash (Block/ Get Away-Stack)' },
         104: { msg: 'Double Upper Slash' },
