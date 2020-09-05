@@ -1,9 +1,9 @@
 String.prototype.clr = function (hexColor) { return `<font color="#${hexColor}">${this}</font>` };
 
 const Vec3 = require('tera-vec3'),
-    mapID = [3026, 3126, 3027, 3103, 3203, 3102, 3202], //[CSNM, CSHM, Hagufna, Undying Warlord, Nightmare Undying Warlord, DANM, DAHM]
-    HuntingZn = [3026, 3126, 3027, 3103, 3203, 3102, 3202], //[CSNM, CSHM, Hagufna, Undying Warlord, Nightmare Undying Warlord, DANM, DAHM]
-    { KelsaikAction, HagufnaAction, UndyingWarlordAction, DraakonAction } = require('./skillsList'),
+    mapID = [3026, 3126, 3027, 3103, 3203, 3102, 3202, 3201, 9982], //[CSNM, CSHM, Hagufna, Undying Warlord, Nightmare Undying Warlord, DANM, DAHM, GVHM, GLSHM]
+    HuntingZn = [3026, 3126, 3027, 3103, 3203, 3102, 3202, 3201, 982], //[CSNM, CSHM, Hagufna, Undying Warlord, Nightmare Undying Warlord, DANM, DAHM, GVHM, GLSHM]
+    { KelsaikAction, HagufnaAction, UndyingWarlordAction, DraakonAction, HellgrammiteAction, GossamerRegentAction, NedraAction, PtakumAction, KylosAction } = require('./skillsList'),
     config = require('./config.json'),
     MarkerItem = 553,
     BossID = [1000, 2000, 3000];
@@ -122,6 +122,16 @@ module.exports = function TeraDungeonGuides(mod) {
         else if (event.zone === mapID[6]) {
             insidemap = true;
             mod.command.message('Welcome to ' + 'Draakon Arena '.clr('56B4E9') + '[Hard Mode]'.clr('00FFFF'));
+            load();
+        }
+        else if (event.zone === mapID[7]) {
+            insidemap = true;
+            mod.command.message('Welcome to ' + 'Goosmer Vault '.clr('56B4E9') + '[Hard Mode]'.clr('00FFFF'));
+            load();
+        }
+        else if (event.zone === mapID[8]) {
+            insidemap = true;
+            mod.command.message('Welcome to ' + 'Grotto Of Lost Souls '.clr('56B4E9') + '[Hard Mode]'.clr('00FFFF'));
             load();
         }
         else unload();
@@ -259,6 +269,14 @@ module.exports = function TeraDungeonGuides(mod) {
                     insidezone = true;
                     whichmode = 7;
                 }
+                else if (event.huntingZoneId == HuntingZn[7]) {
+                    insidezone = true;
+                    whichmode = 8;
+                }
+                else if (event.huntingZoneId == HuntingZn[8]) {
+                    insidezone = true;
+                    whichmode = 9;
+                }
                 else {
                     insidezone = false;
                     whichmode = 0;
@@ -336,6 +354,156 @@ module.exports = function TeraDungeonGuides(mod) {
                         SpawnThing(DraakonAction[skillid].sign_degrees, DraakonAction[skillid].sign_distance)
                         SpawnThing(DraakonAction[skillid].sign2_degrees, DraakonAction[skillid].sign2_distance)
                     }
+                }
+
+                if (whichmode == 8 && whichboss == 1 && HellgrammiteAction[skillid]) {
+                    sendMessage(HellgrammiteAction[skillid].msg);
+                    if (HellgrammiteAction[skillid].mark_interval !== undefined) {
+                        bossCurLocation = event.loc;
+                        bossCurAngle = event.w;
+                        SpawnitemCircle(MarkerItem, HellgrammiteAction[skillid].mark_interval, HellgrammiteAction[skillid].mark_distance, 4000, HellgrammiteAction[skillid].mark_shift_distance)
+                    }
+                }
+
+                if (whichmode == 8 && whichboss == 2 && GossamerRegentAction[skillid]) {
+                    sendMessage(GossamerRegentAction[skillid].msg);
+                    if (GossamerRegentAction[skillid].mark_interval !== undefined) {
+                        bossCurLocation = event.loc;
+                        bossCurAngle = event.w;
+                        SpawnitemCircle(MarkerItem, GossamerRegentAction[skillid].mark_interval, GossamerRegentAction[skillid].mark_distance, 3000)
+                    }
+                }
+
+                if (whichmode == 9 && whichboss == 1 && NedraAction[skillid]) {
+                    sendMessage(NedraAction[skillid].msg);
+                }
+
+                if (whichmode == 9 && whichboss == 2 && PtakumAction[skillid]) {
+                    sendMessage(PtakumAction[skillid].msg);
+                    if ([114, 301, 302].includes(skillid)) {
+                        Spawnitem(553, 20, 260);
+                        Spawnitem(553, 40, 260);
+                        Spawnitem(553, 60, 260);
+                        Spawnitem(553, 80, 260);
+                        Spawnitem(553, 100, 260);
+                        Spawnitem(553, 120, 260);
+                        Spawnitem(553, 140, 260);
+                        Spawnitem(553, 160, 260);
+                        Spawnitem(553, 180, 260);
+                        Spawnitem(553, 200, 260);
+                        Spawnitem(553, 220, 260);
+                        Spawnitem(553, 240, 260);
+                        Spawnitem(553, 260, 260);
+                        Spawnitem(553, 280, 260);
+                        Spawnitem(553, 300, 260);
+                        Spawnitem(553, 320, 260);
+                        Spawnitem(553, 340, 260);
+                        Spawnitem(553, 360, 260);
+                    }
+                    if (skillid === 116) {
+                        Spawnitem(553, 90, 25);
+                        Spawnitem(553, 90, 50);
+                        Spawnitem(553, 90, 75);
+                        Spawnitem(553, 90, 100);
+                        Spawnitem(553, 90, 125);
+                        Spawnitem(553, 90, 150);
+                        Spawnitem(553, 90, 175);
+                        Spawnitem(553, 90, 200);
+                        Spawnitem(553, 90, 225);
+                        Spawnitem(553, 90, 250);
+                        Spawnitem(553, 90, 275);
+                        Spawnitem(553, 90, 300);
+                        Spawnitem(553, 90, 325);
+                        Spawnitem(553, 90, 350);
+                        Spawnitem(553, 90, 375);
+                        Spawnitem(553, 90, 400);
+                        Spawnitem(553, 90, 425);
+                        Spawnitem(553, 90, 450);
+                        Spawnitem(553, 90, 475);
+                        Spawnitem(553, 90, 500);
+                        Spawnitem(553, 270, 25);
+                        Spawnitem(553, 270, 50);
+                        Spawnitem(553, 270, 75);
+                        Spawnitem(553, 270, 100);
+                        Spawnitem(553, 270, 125);
+                        Spawnitem(553, 270, 150);
+                        Spawnitem(553, 270, 175);
+                        Spawnitem(553, 270, 200);
+                        Spawnitem(553, 270, 225);
+                        Spawnitem(553, 270, 250);
+                        Spawnitem(553, 270, 275);
+                        Spawnitem(553, 270, 300);
+                        Spawnitem(553, 270, 325);
+                        Spawnitem(553, 270, 350);
+                        Spawnitem(553, 270, 375);
+                        Spawnitem(553, 270, 400);
+                        Spawnitem(553, 270, 425);
+                        Spawnitem(553, 270, 450);
+                        Spawnitem(553, 270, 475);
+                        Spawnitem(553, 270, 500);
+                    }
+                }
+
+                if (whichmode == 9 && whichboss == 3 && KylosAction[skillid]) {
+                    if (!notice) return;
+                    if (notice && [118, 139, 141, 150, 152].includes(skillid)) {
+                        notice = false;
+                        setTimeout(() => notice = true, 4000);
+                    }
+                    if (whichmode == 9) {
+                        if (skillid === 300) power = true, Level = 0, powerMsg = '';
+                        if (skillid === 360 || skillid === 399) Level = 0;
+                    }
+                    if (power && [118, 143, 145, 146, 144, 147, 148, 154, 155, 161, 162, 213, 215].includes(skillid)) {
+                        Level++;
+                        //powerMsg = '<font color="#FF0000">(' + Level + ') </font> ';
+                        powerMsg = `{` + Level + `} `;
+                    }
+                    if ([146, 148, 154, 155].includes(skillid)) SpawnThing(KylosAction[skillid].sign_degrees, KylosAction[skillid].sign_distance, 8000);
+                    if ([139, 141, 150, 152].includes(skillid)) {
+                        Spawnitem(537, 0, 25);
+                        //Spawnitem(537, 0, 50);
+                        Spawnitem(537, 0, 75);
+                        //Spawnitem(537, 0, 100);
+                        Spawnitem(537, 0, 125);
+                        //Spawnitem(537, 0, 150);
+                        Spawnitem(537, 0, 175);
+                        //Spawnitem(537, 0, 200);
+                        Spawnitem(537, 0, 225);
+                        //Spawnitem(537, 0, 250);
+                        Spawnitem(537, 0, 275);
+                        //Spawnitem(537, 0, 300);
+                        Spawnitem(537, 0, 325);
+                        //Spawnitem(537, 0, 350);
+                        Spawnitem(537, 0, 375);
+                        //Spawnitem(537, 0, 400);
+                        Spawnitem(537, 0, 425);
+                        //Spawnitem(537, 0, 450);
+                        Spawnitem(537, 0, 475);
+                        //Spawnitem(537, 0, 500);
+                        Spawnitem(537, 180, 25);
+                        //Spawnitem(537, 180, 50);
+                        Spawnitem(537, 180, 75);
+                        //Spawnitem(537, 180, 100);
+                        Spawnitem(537, 180, 125);
+                        //Spawnitem(537, 180, 150);
+                        Spawnitem(537, 180, 175);
+                        //Spawnitem(537, 180, 200);
+                        Spawnitem(537, 180, 225);
+                        //Spawnitem(537, 180, 250);
+                        Spawnitem(537, 180, 275);
+                        //Spawnitem(537, 180, 300);
+                        Spawnitem(537, 180, 325);
+                        //Spawnitem(537, 180, 350);
+                        Spawnitem(537, 180, 375);
+                        //Spawnitem(537, 180, 400);
+                        Spawnitem(537, 180, 425);
+                        //Spawnitem(537, 180, 450);
+                        Spawnitem(537, 180, 475);
+                        //Spawnitem(537, 180, 500);
+                        SpawnThing(KylosAction[skillid].sign_degrees, KylosAction[skillid].sign_distance, 5000);
+                    }
+                    sendMessage(powerMsg + KylosAction[skillid].msg);
                 }
             }
         }

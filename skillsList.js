@@ -117,5 +117,62 @@ module.exports = {
         128: { msg: 'IN > OUT (Wave)' }, //Hard Mode
         302: { msg: 'Die in a Fire (Stay Near Boss)' },
         304: { msg: 'Shield Phase (Plague/Regression)' }
+    }, HellgrammiteAction: {
+        119: { msg: 'Back + Front (Slow)' },
+        139: { msg: 'Back + Front (Fast)' },
+        313: { msg: 'Circles (Slow)', mark_interval: 10, mark_distance: 300, mark_shift_distance: 75 },
+        314: { msg: 'Circles (Fast)', mark_interval: 10, mark_distance: 300, mark_shift_distance: 75 },
+        113: { msg: 'Jump (Slow)' },
+        133: { msg: 'Jump (Fast)' },
+        118: { msg: 'Jump P (Slow)' },
+        138: { msg: 'Jump P (Fast)' },
+        111: { msg: 'Back spray (Slow)' },
+        131: { msg: 'Back spray (Fast)' },
+        305: { msg: 'Pizza' }
+    }, GossamerRegentAction: {
+        231: { msg: 'OUT safe', mark_interval: 10, mark_distance: 300 },
+        232: { msg: 'IN safe', mark_interval: 10, mark_distance: 300 },
+        108: { msg: 'Back attack!' },
+        235: { msg: 'Debuffs' },
+        230: { msg: 'AOE' },
+        228: { msg: 'Team up' }
+    }, NedraAction: {
+        106: { msg: 'Heavy' },
+		107: { msg: 'Pushback' },
+		109: { msg: 'Rocks (Small)' },
+		110: { msg: 'Rocks (Large)' },
+		301: { msg: 'Flower stuns' },
+		309: { msg: '1 flower' },
+		310: { msg: '2 flowers' },
+		116: { msg: 'Big AoE attack!!' },
+		312: { msg: 'Golden flower!!' }
+    }, PtakumAction: {
+        105: { msg: 'Spin' },
+		113: { msg: 'Stun inc' },
+		114: { msg: 'Get IN' },
+		116: { msg: 'Front then Back' },
+		301: { msg: '↓ Get OUT + dodge' },
+		302: { msg: '↑ Get IN + dodge' }
+    }, KylosAction: {
+        118: { msg: 'Front triple' }, // aka Tank Buster
+		143: { msg: 'Left Rear' },
+		145: { msg: 'Left Rear' },
+		146: { msg: 'Left Rear (pulses)', sign_degrees: 330, sign_distance: 320 },
+		154: { msg: 'Left Rear (pulses)', sign_degrees: 330, sign_distance: 320 },
+		144: { msg: 'Right Rear' },
+		147: { msg: 'Right Rear' },
+		148: { msg: 'Right Rear (pulses)', sign_degrees: 30, sign_distance: 320 },
+		155: { msg: 'Right Rear (pulses)', sign_degrees: 30, sign_distance: 320 },
+		139: { msg: 'Left Safe', sign_degrees: 270, sign_distance: 200 }, //151 //clockwise (swinging head) king hitting right
+		150: { msg: 'Left Safe', sign_degrees: 270, sign_distance: 200 }, //151 //clockwise (landing) king hit right
+		141: { msg: 'Right Safe', sign_degrees: 90, sign_distance: 200 }, //153 //Counterclockwise (swinging head) King hit left
+		152: { msg: 'Right Safe', sign_degrees: 90, sign_distance: 200 }, //153 //Counterclockwise (landing) King hit left
+		161: { msg: 'Back then Front' },
+		162: { msg: 'Back then Front' },
+		213: { msg: 'Tail' },
+		215: { msg: 'Tail!!' },
+		300: { msg: 'Dodge!! (Awakening 1)' },
+		360: { msg: 'Explosion!!' },
+		399: { msg: 'Dodge!! (Awakening 2)' }
     }
 }
