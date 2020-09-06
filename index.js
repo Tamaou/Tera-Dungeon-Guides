@@ -1,12 +1,14 @@
 String.prototype.clr = function (hexColor) { return `<font color="#${hexColor}">${this}</font>` };
 
 const Vec3 = require('tera-vec3'),
-    mapID = [3026, 3126, 3027, 3103, 3203, 3102, 3202, 3201, 9982], //[CSNM, CSHM, Hagufna, Undying Warlord, Nightmare Undying Warlord, DANM, DAHM, GVHM, GLSHM]
-    HuntingZn = [3026, 3126, 3027, 3103, 3203, 3102, 3202, 3201, 982], //[CSNM, CSHM, Hagufna, Undying Warlord, Nightmare Undying Warlord, DANM, DAHM, GVHM, GLSHM]
-    { KelsaikAction, HagufnaAction, UndyingWarlordAction, DraakonAction, HellgrammiteAction, GossamerRegentAction, NedraAction, PtakumAction, KylosAction } = require('./skillsList'),
+    mapID = [3026, 3126, 3027, 3103, 3203, 3102, 3202, 3201, 9982, 3023], //[CSNM, CSHM, Hagufna, Undying Warlord, Nightmare Undying Warlord, DANM, DAHM, GVHM, GLSHM, AQ]
+    HuntingZn = [3026, 3126, 3027, 3103, 3203, 3102, 3202, 3201, 982, 3023], //[CSNM, CSHM, Hagufna, Undying Warlord, Nightmare Undying Warlord, DANM, DAHM, GVHM, GLSHM, AQ]
+    { KelsaikAction, HagufnaAction, UndyingWarlordAction, DraakonAction, HellgrammiteAction, GossamerRegentAction, NedraAction, PtakumAction, KylosAction } = require('./BossList/skillsList'),
     config = require('./config.json'),
     MarkerItem = 553,
     BossID = [1000, 2000, 3000];
+
+let { AkalathTravanAction, AkalathKashirAction } = require('./BossList/aqSkillList');
 
 module.exports = function TeraDungeonGuides(mod) {
     let enabled = config.enabled,
@@ -26,7 +28,9 @@ module.exports = function TeraDungeonGuides(mod) {
         notice = true,
         power = false,
         Level = 0,
-        powerMsg = '';
+        powerMsg = '',
+        myColor = null,
+        TipMsg = '';
 
     mod.command.add('dginfo', () => {
         mod.command.message(`enabled: ${enabled ? 'true'.clr('56B4E9') : 'false'.clr('E69F00')}.
@@ -134,6 +138,11 @@ module.exports = function TeraDungeonGuides(mod) {
             mod.command.message('Welcome to ' + 'Grotto Of Lost Souls '.clr('56B4E9') + '[Hard Mode]'.clr('00FFFF'));
             load();
         }
+        else if (event.zone === mapID[9]) {
+            insidemap = true;
+            mod.command.message('Welcome to ' + 'Akalath Quarantine '.clr('56B4E9'));
+            load();
+        }
         else unload();
     }
 
@@ -225,6 +234,8 @@ module.exports = function TeraDungeonGuides(mod) {
     function load() {
         if (!hooks.length) {
             hook('S_BOSS_GAGE_INFO', 3, sBossGageInfo);
+            hook('S_ABNORMALITY_BEGIN', 4, sAbnormalityBegin);
+            hook('S_ABNORMALITY_END', 1, sAbnormalityEnd);
             hook('S_ACTION_STAGE', 9, sActionStage);
 
             function sBossGageInfo(event) {
@@ -277,6 +288,10 @@ module.exports = function TeraDungeonGuides(mod) {
                     insidezone = true;
                     whichmode = 9;
                 }
+                else if (event.huntingZoneId == HuntingZn[9]) {
+                    insidezone = true;
+                    whichmode = 10;
+                }
                 else {
                     insidezone = false;
                     whichmode = 0;
@@ -287,10 +302,31 @@ module.exports = function TeraDungeonGuides(mod) {
                 else whichboss = 0;
             }
 
+            function sAbnormalityBegin(event) {
+                if (!enabled || !insidezone || whichboss == 0) return;
+
+                if (!mod.game.me.is(event.target)) return;
+                // AQ
+                if (event.id == 30231000 || event.id == 30231001) {
+                    myColor = event.id;
+                }
+            }
+
+            function sAbnormalityEnd(event) {
+                if (!enabled || !insidezone || whichboss == 0) return;
+
+                if (!mod.game.me.is(event.target)) return;
+                // AQ
+                if (event.id == 30231000 || event.id == 30231001) {
+                    myColor = null;
+                }
+            }
+
             function sActionStage(event) {
                 if (!enabled || !insidezone || whichboss == 0) return;
-                if (event.templateId != BossID[0]) return;
+                if (event.templateId != BossID[0] && event.templateId != BossID[1] && event.templateId != BossID[2]) return;
                 let skillid = event.skill.id % 1000;
+                var bossSkillID = null;
                 bossCurLocation = event.loc;
                 bossCurAngle = event.w;
 
@@ -505,6 +541,21 @@ module.exports = function TeraDungeonGuides(mod) {
                     }
                     sendMessage(powerMsg + KylosAction[skillid].msg);
                 }
+
+                if (whichmode == 10 && whichboss == 1) {
+                    if (event.stage != 0 || !(bossSkillID = AkalathTravanAction.find(obj => obj.id == event.skill.id))) return;
+                    if (myColor && (event.skill.id == 3119 || event.skill.id == 3220)) {
+                        TipMsg = bossSkillID.TIP[myColor % 30231000];
+                    } else {
+                        TipMsg = "";
+                    }
+                    sendMessage(bossSkillID.msg + TipMsg);
+                }
+
+                if (whichmode == 10 && whichboss == 2) {
+                    if (event.stage != 0 || !(bossSkillID = AkalathKashirAction.find(obj => obj.id == skillid))) return;
+                    sendMessage(bossSkillID.msg);
+                }
             }
         }
     }
@@ -518,6 +569,8 @@ module.exports = function TeraDungeonGuides(mod) {
         power = false;
         Level = 0;
         powerMsg = '';
+        myColor = null;
+        TipMsg = '';
     }
 
     function sendMessage(msg) {

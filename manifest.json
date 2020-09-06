@@ -1,13 +1,16 @@
 {
     "files": {
-        "README.md": "7517c927843a85c09a9b08f624a9c766771d959900189a112d28a99a42885b02",
+        "BossList/aqSkillList.js": "83da233d31575912edd6dda7ca37785c8fe81abd63ecce58915d39cf580d7222",
+        "BossList/skillsList.js": "6c083dc97c2ccddc2e8554b1b3f31d7db9efea5adb7dac72fea323a1d7d249df",
+        "README.md": "9e667a956829d3bbd2a81147412680956f42a56cd53399fbdc3448a6951f33b8",
         "config.json": "7a4dcf2d5b344997132bf6700847e665019d7442ab21dd6fddae8da505354049",
-        "index.js": "bb9858a299aab712c44f77c598308bf02e0ba3d7c4931188b6aaff5c26bb86ae",
-        "module.json": "7cdcb32bd3b539cb3e86090cd37172ea5811ef5d5edfebfcd5264b1c0b5738c0",
-        "skillsList.js": "6369bfd21a638cf30fcf7444f55e995237b3775ff9745bced9b2849c043219bc"
+        "index.js": "28f664b4cf0127a9ebba5341b7f72f01c5b116ee95e48d00141b4cbeeca0a50c",
+        "module.json": "7cdcb32bd3b539cb3e86090cd37172ea5811ef5d5edfebfcd5264b1c0b5738c0"
     },
     "defs": {
         "C_CHAT": 1,
+        "S_ABNORMALITY_BEGIN": 4,
+        "S_ABNORMALITY_END": 1,
         "S_ACTION_STAGE": 9,
         "S_BOSS_GAGE_INFO": 3,
         "S_CHAT": 3,

@@ -15,6 +15,7 @@ Toolbox(/8) | Command description | Default
 ## Supported dungeons
 Dungeon name | Status
 --- | ---
+Akalath Quarantine	|	Completed
 Corrupted Skynest | Completed
 Corrupted Skynest (Hard) | Completed
 Draakon Arena | Testing
