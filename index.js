@@ -95,17 +95,17 @@ module.exports = function TeraDungeonGuides(mod) {
     function sLoadTopo(event) {
         if (event.zone === mapID[0]) {
             insidemap = true;
-            mod.command.message('Welcome to ' + 'Corrupted Skynest '.clr('56B4E9') + '[Normal Mode]'.clr('E69F00'));
+            mod.command.message('Welcome to ' + 'Corrupted Skynest '.clr('56B4E9') + '[Normal Mode]'.clr('00FFFF'));
             load();
         }
         else if (event.zone === mapID[1]) {
             insidemap = true;
-            mod.command.message('Welcome to ' + 'Corrupted Skynest '.clr('56B4E9') + '[Hard Mode]'.clr('E69F00'));
+            mod.command.message('Welcome to ' + 'Corrupted Skynest '.clr('56B4E9') + '[Hard Mode]'.clr('00FFFF'));
             load();
         }
         else if (event.zone === mapID[2]) {
             insidemap = true;
-            mod.command.message('Welcome to ' + 'Forbidden Arena '.clr('56B4E9') + '[Hagufna]'.clr('E69F00'));
+            mod.command.message('Welcome to ' + 'Forbidden Arena '.clr('56B4E9') + '[Hagufna]'.clr('00FFFF'));
             load();
         }
         else if (event.zone === mapID[3]) {
