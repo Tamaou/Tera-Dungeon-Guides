@@ -84,7 +84,7 @@ module.exports = {
         302: { msg: 'Boss Charging' },
         303: { msg: 'DONUT Incoming(TAKE NOTE)', mark_interval: 10, mark_distance: 250, mark2_interval: 10, mark2_distance: 600 },
         304: { msg: 'DONUT Incoming (TAKE NOTE)', mark_interval: 10, mark_distance: 250, mark2_interval: 10, mark2_distance: 600 },
-        305: { msg: 'Target Lock(Jumping)' },
+        305: { msg: 'Range Check(Jumping)' },
         307: { msg: 'Charge Complete > Jumping to Target' },
         309: { msg: 'Boss Grab' },
         310: { msg: 'Jump Backwards' },
