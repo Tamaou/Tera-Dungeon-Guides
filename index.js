@@ -1,41 +1,45 @@
 String.prototype.clr = function (hexColor) { return `<font color="#${hexColor}">${this}</font>` };
 
+let { DungeonInfo, KelsaikAction, HagufnaAction, UndyingWarlordAction, DraakonAction, HellgrammiteAction, GossamerRegentAction, NedraAction, PtakumAction, KylosAction, BahaarAction } = require('./skillsList');
 const Vec3 = require('tera-vec3'),
-    mapID = [3026, 3126, 3027, 3103, 3203, 3102, 3202, 3201, 9982, 3023], //[CSNM, CSHM, Hagufna, Undying Warlord, Nightmare Undying Warlord, DANM, DAHM, GVHM, GLSHM, AQ]
-    HuntingZn = [3026, 3126, 3027, 3103, 3203, 3102, 3202, 3201, 982, 3023], //[CSNM, CSHM, Hagufna, Undying Warlord, Nightmare Undying Warlord, DANM, DAHM, GVHM, GLSHM, AQ]
-    { KelsaikAction, HagufnaAction, UndyingWarlordAction, DraakonAction, HellgrammiteAction, GossamerRegentAction, NedraAction, PtakumAction, KylosAction } = require('./BossList/skillsList'),
     config = require('./config.json'),
     MarkerItem = 553,
+    MarkerItem1 = 2,
+    MarkerItem2 = 88850,
+    MarkerItem3 = 912,
     BossID = [1000, 2000, 3000];
 
-let { AkalathTravanAction, AkalathKashirAction } = require('./BossList/aqSkillList');
-
 module.exports = function TeraDungeonGuides(mod) {
-    let enabled = config.enabled,
+    let isTank = true,
+        enabled = config.enabled,
         sendToParty = config.sendToParty,
         streamenabled = config.streamenabled,
         itemhelper = config.itemhelper,
         msgcolour = config.msgcolour,
-        insidemap = false,
-        insidezone = false,
-        whichmode = 0,
-        whichboss = 0,
+        sendToAlert = config.sendToAlert,
         hooks = [],
         bossCurLocation,
         bossCurAngle,
-        uid1 = 999999999,
-        uid2 = 899999999,
+        bossId = 0n,
+        uid0 = 999999999n,
+        uid1 = 899999999n,
+        uid2 = 799999999n,
+        skillid = 0,
+        whichzone = null,
+        whichmode = null,
+        whichboss = 0,
         notice = true,
         power = false,
         Level = 0,
         powerMsg = '',
         myColor = null,
-        TipMsg = '';
+        shining = false,
+        TipMsg = '',
+        timeOut = 0;
 
     mod.command.add('dginfo', () => {
         mod.command.message(`enabled: ${enabled ? 'true'.clr('56B4E9') : 'false'.clr('E69F00')}.
-            insidemap: ${insidemap}.
-            insidezone: ${insidezone}.
+        whichzone: ${whichzone}.
             whichmode: ${whichmode}.
             whichboss: ${whichboss}.
             itemhelper: ${enabled ? 'true'.clr('56B4E9') : 'false'.clr('E69F00')}.
@@ -75,12 +79,11 @@ module.exports = function TeraDungeonGuides(mod) {
                 break;
             case "info":
                 mod.command.message(`enabled: ${enabled ? 'true'.clr('56B4E9') : 'false'.clr('E69F00')}.
-		insidemap: ${insidemap}.
-		insidezone: ${insidezone}.
-		whichmode: ${whichmode}.
-        whichboss: ${whichboss}.
-        itemhelper: ${enabled ? 'true'.clr('56B4E9') : 'false'.clr('E69F00')}.
-		sendToParty: ${sendToParty ? 'true'.clr('56B4E9') : 'false'.clr('E69F00')}.`);
+                whichzone: ${whichzone}.
+		        whichmode: ${whichmode}.
+                whichboss: ${whichboss}.
+                itemhelper: ${enabled ? 'true'.clr('56B4E9') : 'false'.clr('E69F00')}.
+		        sendToParty: ${sendToParty ? 'true'.clr('56B4E9') : 'false'.clr('E69F00')}.`);
                 sendMessage('test');
                 break;
             default:
@@ -90,146 +93,28 @@ module.exports = function TeraDungeonGuides(mod) {
         }
     });
 
-    mod.hook('S_LOAD_TOPO', 3, sLoadTopo);
+    mod.hook('S_LOGIN', mod.majorPatchVersion >= 86 ? 14 : 13, sLogin)
 
-    function sLoadTopo(event) {
-        if (event.zone === mapID[0]) {
-            insidemap = true;
-            mod.command.message('Welcome to ' + 'Corrupted Skynest '.clr('56B4E9') + '[Normal Mode]'.clr('00FFFF'));
-            load();
-        }
-        else if (event.zone === mapID[1]) {
-            insidemap = true;
-            mod.command.message('Welcome to ' + 'Corrupted Skynest '.clr('56B4E9') + '[Hard Mode]'.clr('00FFFF'));
-            load();
-        }
-        else if (event.zone === mapID[2]) {
-            insidemap = true;
-            mod.command.message('Welcome to ' + 'Forbidden Arena '.clr('56B4E9') + '[Hagufna]'.clr('00FFFF'));
-            load();
-        }
-        else if (event.zone === mapID[3]) {
-            insidemap = true;
-            mod.command.message('Welcome to ' + 'Forbidden Arena '.clr('56B4E9') + '[Undying Warlord]'.clr('00FFFF'));
-            load();
-        }
-        else if (event.zone === mapID[4]) {
-            insidemap = true;
-            mod.command.message('Welcome to ' + 'Forbidden Arena '.clr('56B4E9') + '[Nightmare Undying Warlord]'.clr('00FFFF'));
-            load();
-        }
-        else if (event.zone === mapID[5]) {
-            insidemap = true;
-            mod.command.message('Welcome to ' + 'Draakon Arena '.clr('56B4E9') + '[Normal Mode]'.clr('00FFFF'));
-            load();
-        }
-        else if (event.zone === mapID[6]) {
-            insidemap = true;
-            mod.command.message('Welcome to ' + 'Draakon Arena '.clr('56B4E9') + '[Hard Mode]'.clr('00FFFF'));
-            load();
-        }
-        else if (event.zone === mapID[7]) {
-            insidemap = true;
-            mod.command.message('Welcome to ' + 'Goosmer Vault '.clr('56B4E9') + '[Hard Mode]'.clr('00FFFF'));
-            load();
-        }
-        else if (event.zone === mapID[8]) {
-            insidemap = true;
-            mod.command.message('Welcome to ' + 'Grotto Of Lost Souls '.clr('56B4E9') + '[Hard Mode]'.clr('00FFFF'));
-            load();
-        }
-        else if (event.zone === mapID[9]) {
-            insidemap = true;
-            mod.command.message('Welcome to ' + 'Akalath Quarantine '.clr('56B4E9'));
-            load();
-        }
-        else unload();
+    function sLogin(event) {
+        let job = (event.templateId - 10101) % 100;
+        if (job === 1 || job === 10) {
+            isTank = true;
+        } else isTank = false;
     }
 
-    function SpawnThing(degrees, radius) {
-        let r = null, rads = null, finalrad = null, pos = null;
-        r = bossCurAngle - Math.PI;
-        rads = (degrees * Math.PI / 180);
-        finalrad = r - rads;
-        bossCurLocation.x = bossCurLocation.x + radius * Math.cos(finalrad);
-        bossCurLocation.y = bossCurLocation.y + radius * Math.sin(finalrad);
+    mod.game.me.on('change_zone', (zone, quick) => {
+        whichzone = zone;
+        whichmode = zone % 9000;
 
-        mod.toClient('S_SPAWN_BUILD_OBJECT', 2, {
-            gameId: uid1,
-            itemId: 1,
-            loc: bossCurLocation,
-            w: r,
-            unk: 0,
-            ownerName: 'SAFE SPOT',
-            message: 'SAFE'
-        });
-
-        setTimeout(DespawnThing, 5000, uid1, uid2);
-        uid1--;
-        //bossCurLocation.z = bossCurLocation.z - 100;
-        mod.toClient('S_SPAWN_DROPITEM', 8, {
-            gameId: uid2,
-            loc: bossCurLocation,
-            item: 88850,
-            amount: 1,
-            expiry: 6000,
-            owners: [{ playerId: uid2 }],
-            ownerName: "DG-GUIDE"
-        });
-        uid2++;
-    }
-
-    function DespawnThing(uid1_arg, uid1_arg2) {
-        mod.toClient('S_DESPAWN_BUILD_OBJECT', 2, {
-            gameId: uid1_arg,
-            //unk : 0
-        });
-        mod.toClient('S_DESPAWN_DROPITEM', 4, {
-            gameId: uid1_arg2
-        });
-    }
-
-    function Spawnitem(item, angle, radius, lifetime) {
-        let r = null, rads = null, finalrad = null, pos = {};
-
-        r = bossCurAngle - Math.PI;
-        finalrad = r - angle;
-        pos.x = bossCurLocation.x + radius * Math.cos(finalrad);
-        pos.y = bossCurLocation.y + radius * Math.sin(finalrad);
-        pos.z = bossCurLocation.z;
-
-        mod.send('S_SPAWN_COLLECTION', 4, {
-            gameId: uid1,
-            id: item,
-            amount: 1,
-            loc: pos,
-            w: r,
-            unk1: 0,
-            unk2: 0
-        });
-
-        setTimeout(Despawn, lifetime, uid1);
-        uid1--;
-    }
-
-    function Despawn(uid1_arg) {
-        mod.send('S_DESPAWN_COLLECTION', 2, {
-            gameId: uid1_arg
-        });
-    }
-
-    function SpawnitemCircle(item, intervalDegrees, radius, lifetime, shift_distance, shift_angle) {
-        if (shift_angle) {
-            bossCurAngle = (bossCurAngle - Math.PI) - (shift_angle * (Math.PI / 180));
+        if (mod.game.me.inDungeon && DungeonInfo.find(obj => obj.zone == zone)) {
+            mod.command.message(DungeonInfo.find(obj => obj.zone == zone).string);
+            if (whichmode < 100) whichmode = whichmode + 400;
+            load();
+        } else {
+            whichmode = null;
+            unload();
         }
-        if (shift_distance) {
-            bossCurLocation.x = bossCurLocation.x + shift_distance * Math.cos(bossCurAngle);
-            bossCurLocation.y = bossCurLocation.y + shift_distance * Math.sin(bossCurAngle);
-        }
-        for (var angle = -Math.PI; angle <= Math.PI; angle += Math.PI * intervalDegrees / 180) {
-            Spawnitem(item, angle, radius, lifetime);
-        }
-    }
+    });
 
     function load() {
         if (!hooks.length) {
@@ -237,340 +122,437 @@ module.exports = function TeraDungeonGuides(mod) {
             hook('S_ABNORMALITY_BEGIN', 4, sAbnormalityBegin);
             hook('S_ABNORMALITY_END', 1, sAbnormalityEnd);
             hook('S_ACTION_STAGE', 9, sActionStage);
-
-            function sBossGageInfo(event) {
-                if (!insidemap) return;
-
-                let bosshp = (Number(event.curHp) / Number(event.maxHp));
-
-                if (bosshp <= 0) whichboss = 0;
-
-                if (Number(event.curHp) == Number(event.maxHp)) {
-                    notice = true;
-                    power = false;
-                    Level = 0;
-                    powerMsg = '';
-                }
-
-                if (event.huntingZoneId == HuntingZn[0]) {
-                    insidezone = true;
-                    whichmode = 1;
-                }
-                else if (event.huntingZoneId == HuntingZn[1]) {
-                    insidezone = true;
-                    whichmode = 2;
-                }
-                else if (event.huntingZoneId == HuntingZn[2]) {
-                    insidezone = true;
-                    whichmode = 3;
-                }
-                else if (event.huntingZoneId == HuntingZn[3]) {
-                    insidezone = true;
-                    whichmode = 4;
-                }
-                else if (event.huntingZoneId == HuntingZn[4]) {
-                    insidezone = true;
-                    whichmode = 5;
-                }
-                else if (event.huntingZoneId == HuntingZn[5]) {
-                    insidezone = true;
-                    whichmode = 6;
-                }
-                else if (event.huntingZoneId == HuntingZn[6]) {
-                    insidezone = true;
-                    whichmode = 7;
-                }
-                else if (event.huntingZoneId == HuntingZn[7]) {
-                    insidezone = true;
-                    whichmode = 8;
-                }
-                else if (event.huntingZoneId == HuntingZn[8]) {
-                    insidezone = true;
-                    whichmode = 9;
-                }
-                else if (event.huntingZoneId == HuntingZn[9]) {
-                    insidezone = true;
-                    whichmode = 10;
-                }
-                else {
-                    insidezone = false;
-                    whichmode = 0;
-                }
-                if (event.templateId == BossID[0]) whichboss = 1;
-                else if (event.templateId == BossID[1]) whichboss = 2;
-                else if (event.templateId == BossID[2]) whichboss = 3;
-                else whichboss = 0;
-            }
-
-            function sAbnormalityBegin(event) {
-                if (!enabled || !insidezone || whichboss == 0) return;
-
-                if (!mod.game.me.is(event.target)) return;
-                // AQ
-                if (event.id == 30231000 || event.id == 30231001) {
-                    myColor = event.id;
-                }
-            }
-
-            function sAbnormalityEnd(event) {
-                if (!enabled || !insidezone || whichboss == 0) return;
-
-                if (!mod.game.me.is(event.target)) return;
-                // AQ
-                if (event.id == 30231000 || event.id == 30231001) {
-                    myColor = null;
-                }
-            }
-
-            function sActionStage(event) {
-                if (!enabled || !insidezone || whichboss == 0) return;
-                if (event.templateId != BossID[0] && event.templateId != BossID[1] && event.templateId != BossID[2]) return;
-                let skillid = event.skill.id % 1000;
-                var bossSkillID = null;
-                bossCurLocation = event.loc;
-                bossCurAngle = event.w;
-
-                if (whichmode == 1 && whichboss == 1 && KelsaikAction[skillid]) {
-                    sendMessage(KelsaikAction[skillid].msg);
-                    if (KelsaikAction[skillid].mark_interval !== undefined) {
-                        bossCurLocation = event.loc;
-                        bossCurAngle = event.w;
-                        SpawnitemCircle(MarkerItem, KelsaikAction[skillid].mark_interval, KelsaikAction[skillid].mark_distance, 9000);
-                    }
-                }
-
-                if (whichmode == 2 && whichboss == 1 && KelsaikAction[skillid]) {
-                    sendMessage(KelsaikAction[skillid].msg);
-                    if (KelsaikAction[skillid].mark_interval !== undefined) {
-                        bossCurLocation = event.loc;
-                        bossCurAngle = event.w;
-                        SpawnitemCircle(MarkerItem, KelsaikAction[skillid].mark_interval, KelsaikAction[skillid].mark_distance, 9000);
-                    }
-                }
-
-                if (whichmode == 3 && whichboss == 1 && HagufnaAction[skillid]) {
-                    sendMessage(HagufnaAction[skillid].msg);
-                }
-
-                if (whichmode == 4 && whichboss == 1 && UndyingWarlordAction[skillid]) {
-                    sendMessage(UndyingWarlordAction[skillid].msg);
-                    if (UndyingWarlordAction[skillid].mark_interval !== undefined && UndyingWarlordAction[skillid].mark2_interval !== undefined) {
-                        bossCurLocation = event.loc;
-                        bossCurAngle = event.w;
-                        SpawnitemCircle(MarkerItem, UndyingWarlordAction[skillid].mark_interval, UndyingWarlordAction[skillid].mark_distance, 9000);
-                        SpawnitemCircle(MarkerItem, UndyingWarlordAction[skillid].mark2_interval, UndyingWarlordAction[skillid].mark2_distance, 9000);
-                    }
-                }
-
-                if (whichmode == 5 && whichboss == 1 && UndyingWarlordAction[skillid]) {
-                    sendMessage(UndyingWarlordAction[skillid].msg);
-                    if (UndyingWarlordAction[skillid].mark_interval !== undefined && UndyingWarlordAction[skillid].mark2_interval !== undefined) {
-                        bossCurLocation = event.loc;
-                        bossCurAngle = event.w;
-                        SpawnitemCircle(MarkerItem, UndyingWarlordAction[skillid].mark_interval, UndyingWarlordAction[skillid].mark_distance, 9000);
-                        SpawnitemCircle(MarkerItem, UndyingWarlordAction[skillid].mark2_interval, UndyingWarlordAction[skillid].mark2_distance, 9000);
-                    }
-                }
-
-                if (whichmode == 6 && whichboss == 1 && DraakonAction[skillid]) {
-                    sendMessage(DraakonAction[skillid].msg);
-                    if (DraakonAction[skillid].sign_degrees !== undefined && DraakonAction[skillid].sign2_degrees !== undefined) {
-                        bossCurLocation = event.loc;
-                        bossCurAngle = event.w;
-                        SpawnThing(DraakonAction[skillid].sign_degrees, DraakonAction[skillid].sign_distance)
-                        SpawnThing(DraakonAction[skillid].sign2_degrees, DraakonAction[skillid].sign2_distance)
-                    }
-                }
-
-                if (whichmode == 7 && whichboss == 1 && DraakonAction[skillid]) {
-                    sendMessage(DraakonAction[skillid].msg);
-                    if (DraakonAction[skillid].sign_degrees !== undefined && DraakonAction[skillid].sign2_degrees !== undefined) {
-                        bossCurLocation = event.loc;
-                        bossCurAngle = event.w;
-                        SpawnThing(DraakonAction[skillid].sign_degrees, DraakonAction[skillid].sign_distance)
-                        SpawnThing(DraakonAction[skillid].sign2_degrees, DraakonAction[skillid].sign2_distance)
-                    }
-                }
-
-                if (whichmode == 8 && whichboss == 1 && HellgrammiteAction[skillid]) {
-                    sendMessage(HellgrammiteAction[skillid].msg);
-                    if (HellgrammiteAction[skillid].mark_interval !== undefined) {
-                        bossCurLocation = event.loc;
-                        bossCurAngle = event.w;
-                        SpawnitemCircle(MarkerItem, HellgrammiteAction[skillid].mark_interval, HellgrammiteAction[skillid].mark_distance, 4000, HellgrammiteAction[skillid].mark_shift_distance)
-                    }
-                }
-
-                if (whichmode == 8 && whichboss == 2 && GossamerRegentAction[skillid]) {
-                    sendMessage(GossamerRegentAction[skillid].msg);
-                    if (GossamerRegentAction[skillid].mark_interval !== undefined) {
-                        bossCurLocation = event.loc;
-                        bossCurAngle = event.w;
-                        SpawnitemCircle(MarkerItem, GossamerRegentAction[skillid].mark_interval, GossamerRegentAction[skillid].mark_distance, 3000)
-                    }
-                }
-
-                if (whichmode == 9 && whichboss == 1 && NedraAction[skillid]) {
-                    sendMessage(NedraAction[skillid].msg);
-                }
-
-                if (whichmode == 9 && whichboss == 2 && PtakumAction[skillid]) {
-                    sendMessage(PtakumAction[skillid].msg);
-                    if ([114, 301, 302].includes(skillid)) {
-                        Spawnitem(553, 20, 260);
-                        Spawnitem(553, 40, 260);
-                        Spawnitem(553, 60, 260);
-                        Spawnitem(553, 80, 260);
-                        Spawnitem(553, 100, 260);
-                        Spawnitem(553, 120, 260);
-                        Spawnitem(553, 140, 260);
-                        Spawnitem(553, 160, 260);
-                        Spawnitem(553, 180, 260);
-                        Spawnitem(553, 200, 260);
-                        Spawnitem(553, 220, 260);
-                        Spawnitem(553, 240, 260);
-                        Spawnitem(553, 260, 260);
-                        Spawnitem(553, 280, 260);
-                        Spawnitem(553, 300, 260);
-                        Spawnitem(553, 320, 260);
-                        Spawnitem(553, 340, 260);
-                        Spawnitem(553, 360, 260);
-                    }
-                    if (skillid === 116) {
-                        Spawnitem(553, 90, 25);
-                        Spawnitem(553, 90, 50);
-                        Spawnitem(553, 90, 75);
-                        Spawnitem(553, 90, 100);
-                        Spawnitem(553, 90, 125);
-                        Spawnitem(553, 90, 150);
-                        Spawnitem(553, 90, 175);
-                        Spawnitem(553, 90, 200);
-                        Spawnitem(553, 90, 225);
-                        Spawnitem(553, 90, 250);
-                        Spawnitem(553, 90, 275);
-                        Spawnitem(553, 90, 300);
-                        Spawnitem(553, 90, 325);
-                        Spawnitem(553, 90, 350);
-                        Spawnitem(553, 90, 375);
-                        Spawnitem(553, 90, 400);
-                        Spawnitem(553, 90, 425);
-                        Spawnitem(553, 90, 450);
-                        Spawnitem(553, 90, 475);
-                        Spawnitem(553, 90, 500);
-                        Spawnitem(553, 270, 25);
-                        Spawnitem(553, 270, 50);
-                        Spawnitem(553, 270, 75);
-                        Spawnitem(553, 270, 100);
-                        Spawnitem(553, 270, 125);
-                        Spawnitem(553, 270, 150);
-                        Spawnitem(553, 270, 175);
-                        Spawnitem(553, 270, 200);
-                        Spawnitem(553, 270, 225);
-                        Spawnitem(553, 270, 250);
-                        Spawnitem(553, 270, 275);
-                        Spawnitem(553, 270, 300);
-                        Spawnitem(553, 270, 325);
-                        Spawnitem(553, 270, 350);
-                        Spawnitem(553, 270, 375);
-                        Spawnitem(553, 270, 400);
-                        Spawnitem(553, 270, 425);
-                        Spawnitem(553, 270, 450);
-                        Spawnitem(553, 270, 475);
-                        Spawnitem(553, 270, 500);
-                    }
-                }
-
-                if (whichmode == 9 && whichboss == 3 && KylosAction[skillid]) {
-                    if (!notice) return;
-                    if (notice && [118, 139, 141, 150, 152].includes(skillid)) {
-                        notice = false;
-                        setTimeout(() => notice = true, 4000);
-                    }
-                    if (whichmode == 9) {
-                        if (skillid === 300) power = true, Level = 0, powerMsg = '';
-                        if (skillid === 360 || skillid === 399) Level = 0;
-                    }
-                    if (power && [118, 143, 145, 146, 144, 147, 148, 154, 155, 161, 162, 213, 215].includes(skillid)) {
-                        Level++;
-                        //powerMsg = '<font color="#FF0000">(' + Level + ') </font> ';
-                        powerMsg = `{` + Level + `} `;
-                    }
-                    if ([146, 148, 154, 155].includes(skillid)) SpawnThing(KylosAction[skillid].sign_degrees, KylosAction[skillid].sign_distance, 8000);
-                    if ([139, 141, 150, 152].includes(skillid)) {
-                        Spawnitem(537, 0, 25);
-                        //Spawnitem(537, 0, 50);
-                        Spawnitem(537, 0, 75);
-                        //Spawnitem(537, 0, 100);
-                        Spawnitem(537, 0, 125);
-                        //Spawnitem(537, 0, 150);
-                        Spawnitem(537, 0, 175);
-                        //Spawnitem(537, 0, 200);
-                        Spawnitem(537, 0, 225);
-                        //Spawnitem(537, 0, 250);
-                        Spawnitem(537, 0, 275);
-                        //Spawnitem(537, 0, 300);
-                        Spawnitem(537, 0, 325);
-                        //Spawnitem(537, 0, 350);
-                        Spawnitem(537, 0, 375);
-                        //Spawnitem(537, 0, 400);
-                        Spawnitem(537, 0, 425);
-                        //Spawnitem(537, 0, 450);
-                        Spawnitem(537, 0, 475);
-                        //Spawnitem(537, 0, 500);
-                        Spawnitem(537, 180, 25);
-                        //Spawnitem(537, 180, 50);
-                        Spawnitem(537, 180, 75);
-                        //Spawnitem(537, 180, 100);
-                        Spawnitem(537, 180, 125);
-                        //Spawnitem(537, 180, 150);
-                        Spawnitem(537, 180, 175);
-                        //Spawnitem(537, 180, 200);
-                        Spawnitem(537, 180, 225);
-                        //Spawnitem(537, 180, 250);
-                        Spawnitem(537, 180, 275);
-                        //Spawnitem(537, 180, 300);
-                        Spawnitem(537, 180, 325);
-                        //Spawnitem(537, 180, 350);
-                        Spawnitem(537, 180, 375);
-                        //Spawnitem(537, 180, 400);
-                        Spawnitem(537, 180, 425);
-                        //Spawnitem(537, 180, 450);
-                        Spawnitem(537, 180, 475);
-                        //Spawnitem(537, 180, 500);
-                        SpawnThing(KylosAction[skillid].sign_degrees, KylosAction[skillid].sign_distance, 5000);
-                    }
-                    sendMessage(powerMsg + KylosAction[skillid].msg);
-                }
-
-                if (whichmode == 10 && whichboss == 1) {
-                    if (event.stage != 0 || !(bossSkillID = AkalathTravanAction.find(obj => obj.id == event.skill.id))) return;
-                    if (myColor && (event.skill.id == 3119 || event.skill.id == 3220)) {
-                        TipMsg = bossSkillID.TIP[myColor % 30231000];
-                    } else {
-                        TipMsg = "";
-                    }
-                    sendMessage(bossSkillID.msg + TipMsg);
-                }
-
-                if (whichmode == 10 && whichboss == 2) {
-                    if (event.stage != 0 || !(bossSkillID = AkalathKashirAction.find(obj => obj.id == skillid))) return;
-                    sendMessage(bossSkillID.msg);
-                }
-            }
         }
     }
 
+    function unload() {
+        if (hooks.length) {
+            for (let h of hooks) mod.unhook(h);
+            hooks = []
+        }
+        reset();
+    }
+
+    function hook() {
+        hooks.push(mod.hook(...arguments));
+    }
+
     function reset() {
-        insidemap = false;
-        insidezone = false;
-        whichmode = 0;
-        whichboss = 0;
         notice = true;
         power = false;
         Level = 0;
         powerMsg = '';
         myColor = null;
+        shining = false;
         TipMsg = '';
+        timeOut = 0;
+        whichboss = 0;
+        mod.clearAllTimeouts();
+    }
+
+    function sBossGageInfo(event) {
+        let bosshp = (Number(event.curHp) / Number(event.maxHp));
+
+        if (bosshp <= 0) whichboss = 0;
+
+        if (Number(event.curHp) == Number(event.maxHp)) {
+            notice = true;
+            power = false;
+            Level = 0;
+            powerMsg = '';
+        }
+
+        if (event.templateId == BossID[0]) whichboss = 1;
+        else if (event.templateId == BossID[1]) whichboss = 2;
+        else if (event.templateId == BossID[2]) whichboss = 3;
+        else whichboss = 0;
+    }
+
+    function sAbnormalityBegin(event) {
+        if (!enabled || !whichmode) return;
+
+        if (!mod.game.me.is(event.target)) return;
+        // AQ
+        if (event.id == 30231000 || event.id == 30231001) {
+            myColor = event.id;
+        }
+
+        //Bahaar
+        if (event.id == 90442303) alertMessage('Healer should use [Regress] skill');
+        if (event.id == 90442304) alertMessage('Stop the Boss using [Stun] skill');
+
+        if (event.id == 90442000) shining = true;
+        if (event.id == 90442001) shining = false;
+
+        if (event.id == 90444001 && skillid == 104) setTimeout(() => { if (shining) sendMessage('back hammer (next)'); }, 500);
+        if (event.id == 90442000 && skillid == 134) setTimeout(() => { if (shining) sendMessage('back hammer (next)'); }, 300);
+        if (event.id == 90444001 && skillid == 118) setTimeout(() => { if (shining) sendMessage('back hammer (next)'); }, 50);
+    }
+
+    function sAbnormalityEnd(event) {
+        if (!enabled || !whichmode) return;
+
+        if (!mod.game.me.is(event.target)) return;
+        // AQ
+        if (event.id == 30231000 || event.id == 30231001) {
+            myColor = null;
+        }
+    }
+
+    function sActionStage(event) {
+        if (!enabled || !whichmode || whichboss == 0) return;
+        if (event.templateId != BossID[0] && event.templateId != BossID[1] && event.templateId != BossID[2]) return;
+        skillid = event.skill.id % 1000;
+        bossCurLocation = event.loc;
+        bossCurAngle = event.w;
+        var bossSkillID = null;
+
+        //Corrupted Skynest Normal, Corrupted Skynest Hard
+        if ([3026, 3126].includes(whichmode) && whichboss == 1) {
+            if (event.stage != 0 || !(bossSkillID = KelsaikAction.find(obj => obj.id == skillid))) return;
+            sendMessage(bossSkillID.msg);
+            if ([212, 213, 214, 215].includes(skillid)) {
+                bossCurLocation = event.loc;
+                bossCurAngle = event.w;
+                SpawnitemCircle(MarkerItem, 10, 400, 9000);
+            }
+        }
+
+        //Hagufna
+        if (whichmode == 3027 && whichboss == 1) {
+            if (event.stage != 0 || !(bossSkillID = HagufnaAction.find(obj => obj.id == skillid))) return;
+            sendMessage(bossSkillID.msg);
+        }
+
+        //UndyingWarlord , Nightmare Undying Warlord
+        if ([3103, 3203].includes(whichmode) && whichboss == 1) {
+            if (event.stage != 0 || !(bossSkillID = UndyingWarlordAction.find(obj => obj.id == skillid))) return;
+            sendMessage(bossSkillID.msg);
+            if ([303, 304].includes(skillid)) {
+                bossCurLocation = event.loc;
+                bossCurAngle = event.w;
+                SpawnitemCircle(MarkerItem, 10, 250, 9000);
+                SpawnitemCircle(MarkerItem, 10, 600, 9000);
+            }
+        }
+
+        //Draakon Arena, Draakon Arena Hard Mode
+        if ([3102, 3202].includes(whichmode) && whichboss == 1) {
+            if (event.stage != 0 || !(bossSkillID = DraakonAction.find(obj => obj.id == skillid))) return;
+            sendMessage(bossSkillID.msg);
+            if ([121, 1244].includes(skillid)) {
+                bossCurLocation = event.loc;
+                bossCurAngle = event.w;
+                Spawnitem(MarkerItem, 110, 400, 9000);
+                Spawnitem(MarkerItem, 250, 400, 9000);
+                Spawnitem(MarkerItem, 110, 400, 9000);
+                Spawnitem(MarkerItem, 250, 400, 9000);
+            }
+        }
+
+        //Goosmer Vault Hard Mode , Hellgramite
+        if (whichmode == 3201 && whichboss == 1) {
+            if (event.stage != 0 || !(bossSkillID = HellgrammiteAction.find(obj => obj.id == skillid))) return;
+            sendMessage(bossSkillID.msg);
+            if ([313, 314].includes(skillid)) {
+                bossCurLocation = event.loc;
+                bossCurAngle = event.w;
+                SpawnitemCircle(MarkerItem, 10, 300, 4000, 75);
+            }
+        }
+
+        //Goosmer Vault Hard Mode , GossamerRegent
+        if (whichmode == 3201 && whichboss == 2) {
+            if (event.stage != 0 || !(bossSkillID = GossamerRegentAction.find(obj => obj.id == skillid))) return;
+            sendMessage(bossSkillID.msg);
+            if ([231, 232].includes(skillid)) {
+                bossCurLocation = event.loc;
+                bossCurAngle = event.w;
+                SpawnitemCircle(MarkerItem, 10, 300, 3000);
+            }
+        }
+
+        //Grotto Of Lost Soul, Nedra
+        if (whichmode == 982 && whichboss == 1) {
+            if (event.stage != 0 || !(bossSkillID = NedraAction.find(obj => obj.id == skillid))) return;
+            sendMessage(bossSkillID.msg);
+        }
+
+        //Grotto Of Lost Soul, Ptakum
+        if (whichmode == 982 && whichboss == 2) {
+            if (event.stage != 0 || !(bossSkillID = PtakumAction.find(obj => obj.id == skillid))) return;
+            sendMessage(bossSkillID.msg);
+            if ([114, 301, 302].includes(skillid)) {
+                Spawnitem(MarkerItem, 20, 260, 5000);
+                Spawnitem(MarkerItem, 40, 260, 5000);
+                Spawnitem(MarkerItem, 60, 260, 5000);
+                Spawnitem(MarkerItem, 80, 260, 5000);
+                Spawnitem(MarkerItem, 100, 260, 5000);
+                Spawnitem(MarkerItem, 120, 260, 5000);
+                Spawnitem(MarkerItem, 140, 260, 5000);
+                Spawnitem(MarkerItem, 160, 260, 5000);
+                Spawnitem(MarkerItem, 180, 260, 5000);
+                Spawnitem(MarkerItem, 200, 260, 5000);
+                Spawnitem(MarkerItem, 220, 260, 5000);
+                Spawnitem(MarkerItem, 240, 260, 5000);
+                Spawnitem(MarkerItem, 260, 260, 5000);
+                Spawnitem(MarkerItem, 280, 260, 5000);
+                Spawnitem(MarkerItem, 300, 260, 5000);
+                Spawnitem(MarkerItem, 320, 260, 5000);
+                Spawnitem(MarkerItem, 340, 260, 5000);
+                Spawnitem(MarkerItem, 360, 260, 5000);
+            }
+            if (skillid === 116) {
+                Spawnitem(MarkerItem, 90, 25, 5000);
+                Spawnitem(MarkerItem, 90, 50, 5000);
+                Spawnitem(MarkerItem, 90, 75, 5000);
+                Spawnitem(MarkerItem, 90, 100, 5000);
+                Spawnitem(MarkerItem, 90, 125, 5000);
+                Spawnitem(MarkerItem, 90, 150, 5000);
+                Spawnitem(MarkerItem, 90, 175, 5000);
+                Spawnitem(MarkerItem, 90, 200, 5000);
+                Spawnitem(MarkerItem, 90, 225, 5000);
+                Spawnitem(MarkerItem, 90, 250, 5000);
+                Spawnitem(MarkerItem, 90, 275, 5000);
+                Spawnitem(MarkerItem, 90, 300, 5000);
+                Spawnitem(MarkerItem, 90, 325, 5000);
+                Spawnitem(MarkerItem, 90, 350, 5000);
+                Spawnitem(MarkerItem, 90, 375, 5000);
+                Spawnitem(MarkerItem, 90, 400, 5000);
+                Spawnitem(MarkerItem, 90, 425, 5000);
+                Spawnitem(MarkerItem, 90, 450, 5000);
+                Spawnitem(MarkerItem, 90, 475, 5000);
+                Spawnitem(MarkerItem, 90, 500, 5000);
+                Spawnitem(MarkerItem, 270, 25, 5000);
+                Spawnitem(MarkerItem, 270, 50, 5000);
+                Spawnitem(MarkerItem, 270, 75, 5000);
+                Spawnitem(MarkerItem, 270, 100, 5000);
+                Spawnitem(MarkerItem, 270, 125, 5000);
+                Spawnitem(MarkerItem, 270, 150, 5000);
+                Spawnitem(MarkerItem, 270, 175, 5000);
+                Spawnitem(MarkerItem, 270, 200, 5000);
+                Spawnitem(MarkerItem, 270, 225, 5000);
+                Spawnitem(MarkerItem, 270, 250, 5000);
+                Spawnitem(MarkerItem, 270, 275, 5000);
+                Spawnitem(MarkerItem, 270, 300, 5000);
+                Spawnitem(MarkerItem, 270, 325, 5000);
+                Spawnitem(MarkerItem, 270, 350, 5000);
+                Spawnitem(MarkerItem, 270, 375, 5000);
+                Spawnitem(MarkerItem, 270, 400, 5000);
+                Spawnitem(MarkerItem, 270, 425, 5000);
+                Spawnitem(MarkerItem, 270, 450, 5000);
+                Spawnitem(MarkerItem, 270, 475, 5000);
+                Spawnitem(MarkerItem, 270, 500, 5000);
+            }
+        }
+
+        //Grotto Of Lost Soul, Kylos
+        if (whichmode == 982 && whichboss == 3) {
+            if (event.stage != 0 || !(bossSkillID = KylosAction.find(obj => obj.id == skillid))) return;
+            if (!notice) return;
+            if (notice && [118, 139, 141, 150, 152].includes(skillid)) {
+                notice = false;
+                setTimeout(() => notice = true, 4000);
+            }
+            if (skillid === 300) power = true, Level = 0, powerMsg = '';
+            if (skillid === 360 || skillid === 399) Level = 0;
+
+            if (power && [118, 143, 145, 146, 144, 147, 148, 154, 155, 161, 162, 213, 215].includes(skillid)) {
+                Level++;
+                powerMsg = `{` + Level + `} `;
+            }
+
+            if ([146, 154].includes(skillid)) {
+                SpawnThing(false, 330, 320, 8000);
+            }
+
+            if ([148, 155].includes(skillid)) {
+                SpawnThing(false, 30, 120, 8000);
+            }
+
+            if ([139, 141, 150, 152].includes(skillid)) {
+                Spawnitem(MarkerItem, 0, 25, 5000);
+                Spawnitem(MarkerItem, 0, 75, 5000);
+                Spawnitem(MarkerItem, 0, 125, 5000);
+                Spawnitem(MarkerItem, 0, 175, 5000);
+                Spawnitem(MarkerItem, 0, 225, 5000);
+                Spawnitem(MarkerItem, 0, 275, 5000);
+                Spawnitem(MarkerItem, 0, 325, 5000);
+                Spawnitem(MarkerItem, 0, 375, 5000);
+                Spawnitem(MarkerItem, 0, 425, 5000);
+                Spawnitem(MarkerItem, 0, 475, 5000);
+                Spawnitem(MarkerItem, 180, 25, 5000);
+                Spawnitem(MarkerItem, 180, 75, 5000);
+                Spawnitem(MarkerItem, 180, 125, 5000);
+                Spawnitem(MarkerItem, 180, 175, 5000);
+                Spawnitem(MarkerItem, 180, 225, 5000);
+                Spawnitem(MarkerItem, 180, 275, 5000);
+                Spawnitem(MarkerItem, 180, 325, 5000);
+                Spawnitem(MarkerItem, 180, 375, 5000);
+                Spawnitem(MarkerItem, 180, 425, 5000);
+                Spawnitem(MarkerItem, 180, 475, 5000);
+                SpawnThing(false, bossSkillID.sign_degrees, bossSkillID.sign_distance, 5000);
+            }
+
+            if ([139, 150].includes(skillid)) {
+                SpawnThing(false, 270, 200, 5000);
+            }
+
+            if ([141, 152].includes(skillid)) {
+                SpawnThing(false, 90, 200, 5000);
+            }
+            sendMessage(powerMsg + bossSkillID.msg);
+        }
+
+        //Akalath Quarantine, AkalathTravan
+        if (whichmode == 3023 && whichboss == 1) {
+            if (event.stage != 0 || !(bossSkillID = AkalathTravanAction.find(obj => obj.id == event.skill.id))) return;
+            if (myColor && (event.skill.id == 3119 || event.skill.id == 3220)) {
+                TipMsg = bossSkillID.TIP[myColor % 30231000];
+            } else {
+                TipMsg = "";
+            }
+            sendMessage(bossSkillID.msg + TipMsg);
+        }
+
+        //Akalath Quarantine, AkalathKashira
+        if (whichmode == 3023 && whichboss == 2) {
+            if (event.stage != 0 || !(bossSkillID = AkalathKashirAction.find(obj => obj.id == skillid))) return;
+            sendMessage(bossSkillID.msg);
+        }
+
+        //Bahaar
+        if (whichmode == 444 && [1, 2].includes(whichboss)) {
+            if (event.stage != 0 || !(bossSkillID = BahaarAction.find(obj => obj.id == skillid))) return;
+            sendMessage(bossSkillID.msg);
+
+            bossCurLocation = event.loc;
+            bossCurAngle = event.w;
+
+            if (event.templateId == 2500) {
+                bossCurLocation = event.loc;
+                bossCurAngle = event.w;
+                skill = event.skill.id % 1000;
+                if (skill == 305) {
+                    sendMessage('<font color="#FF0000">LASER firing</font>');
+                    if (itemhelper) {
+                        Spawnitem1(MarkerItem3, 180, 3000, 3000);
+                    }
+                    return;
+                }
+            }
+
+            skillid = event.skill.id % 1000;
+            switch (skillid) {
+                case 121:
+                case 122:
+                case 123:
+                case 140:
+                case 141:
+                case 142:
+                    timeOut = setTimeout(() => {
+                        alertMessage('Waves soon...');
+                    }, 60000);
+                    break;
+            }
+
+            switch (skillid) {
+                case 103:
+                case 125:
+                    SpawnThing(true, 184, 400, 100);
+                    SpawnitemCircle(MarkerItem, 8, 350, 3000);
+                    break;
+
+                case 131:
+                    SpawnThing(true, 182, 340, 100);
+                    SpawnitemCircle(MarkerItem, 8, 660, 4000);
+                    break;
+
+                case 126:
+                case 132:
+                    Spawnitem1(MarkerItem, 180, 500, 2000);
+                    Spawnitem1(MarkerItem, 0, 500, 2000);
+                    if (skillid === 126) {
+                        SpawnThing(true, 90, 100, 100);
+                    }
+                    if (skillid === 132) {
+                        SpawnThing(true, 180, 100, 100);
+                    }
+                    Spawnitem1(MarkerItem, 180, 500, 2000);
+                    Spawnitem1(MarkerItem, 0, 500, 2000);
+                    break;
+
+                case 112:
+                case 135:
+                    SpawnThing(true, 184, 220, 100);
+                    SpawnitemCircle(MarkerItem, 12, 210, 4000);
+                    break;
+
+                case 114:
+                    SpawnThing(true, 184, 260, 100);
+                    SpawnitemCircle(MarkerItem, 10, 320, 4000);
+                    break;
+
+                case 116:
+                    SpawnitemCircle(MarkerItem, 8, 290, 6000);
+                    break;
+
+                case 111:
+                case 137:
+                    SpawnThing(true, 0, 500, 100);
+                    SpawnitemCircle(MarkerItem, 8, 480, 2000);
+                    break;
+
+                case 121:
+                case 122:
+                case 123:
+                case 140:
+                case 141:
+                case 142:
+                    SpawnThing(true, 90, 50, 100);
+                    Spawnitem1(MarkerItem, 180, 500, 6000);
+                    Spawnitem1(MarkerItem, 0, 500, 6000);
+
+                    SpawnThing(true, 70, 100, 100);
+                    Spawnitem1(MarkerItem, 180, 500, 6000);
+                    Spawnitem1(MarkerItem, 0, 500, 6000);
+                    break;
+
+                case 101:
+                    Spawnitem1(MarkerItem, 345, 500, 3000);
+                    Spawnitem1(MarkerItem, 270, 500, 3000);
+                    break;
+
+                case 311:
+                case 312:
+                    Spawnitem1(MarkerItem, 180, 500, 6000);
+                    Spawnitem1(MarkerItem, 0, 500, 6000);
+                    break;
+
+                case 119:
+                    SpawnThing(false, 270, 300, 2000);
+                    break;
+                case 120:
+                    SpawnThing(false, 90, 300, 2000);
+                    break;
+
+                default:
+                    break;
+            }
+
+        }
+        //End Bahaar
+    }
+
+    function alertMessage(msg) {
+        if (sendToAlert) {
+            mod.send('S_DUNGEON_EVENT_MESSAGE', 2, {
+                type: 43,
+                chat: 0,
+                channel: 0,
+                message: msg
+            });
+        }
     }
 
     function sendMessage(msg) {
@@ -591,15 +573,103 @@ module.exports = function TeraDungeonGuides(mod) {
             });
         }
     }
-    function unload() {
-        if (hooks.length) {
-            for (let h of hooks) mod.unhook(h);
-            hooks = []
+
+    function SpawnThing(hide, degrees, radius, times) {
+        let r = null, rads = null, finalrad = null;
+
+        r = bossCurAngle - Math.PI;
+        rads = (degrees * Math.PI / 180);
+        finalrad = r - rads;
+        bossCurLocation.x = bossCurLocation.x + radius * Math.cos(finalrad);
+        bossCurLocation.y = bossCurLocation.y + radius * Math.sin(finalrad);
+
+        if (!hide) {
+            mod.send('S_SPAWN_BUILD_OBJECT', 2, {
+                gameId: uid1,
+                itemId: MarkerItem1,
+                loc: curLocation,
+                w: r,
+                unk: 0,
+                ownerName: 'SAFE',
+                message: 'SAFE'
+            });
+
+            //if (hide) { curLocation.z = curLocation.z - 1000; }
+            mod.send('S_SPAWN_DROPITEM', 8, {
+                gameId: uid2,
+                item: MarkerItem2,
+                loc: curLocation,
+                amount: 1,
+                expiry: 600000,
+                owners: [{
+                    id: 0
+                }],
+                ownerName: "TDN"
+            });
+            //if (hide) { curLocation.z = curLocation.z + 1000; }
+
+            setTimeout(DespawnThing, times, uid1, uid2);
+            uid1--;
+            uid2--;
         }
-        reset();
     }
 
-    function hook() {
-        hooks.push(mod.hook(...arguments));
+    function DespawnThing(uid_arg1, uid_arg2) {
+        mod.send('S_DESPAWN_BUILD_OBJECT', 2, {
+            gameId: uid_arg1
+
+        });
+        mod.send('S_DESPAWN_DROPITEM', 4, {
+            gameId: uid_arg2
+        });
+    }
+
+    function Spawnitem(item, degrees, radius, times) {
+        let r = null, rads = null, finalrad = null, pos = {};
+
+        r = bossCurAngle - Math.PI;
+        rads = (degrees * Math.PI / 180);
+        finalrad = r - rads;
+        pos.x = bossCurLocation.x + radius * Math.cos(finalrad);
+        pos.y = bossCurLocation.y + radius * Math.sin(finalrad);
+        pos.z = bossCurLocation.z;
+
+        mod.send('S_SPAWN_COLLECTION', 4, {
+            gameId: uid0,
+            id: item,
+            amount: 1,
+            loc: pos,
+            w: r,
+            unk1: 0,
+            unk2: 0
+        });
+
+        setTimeout(Despawn, times, uid0);
+        uid0--;
+    }
+
+    function Despawn(uid_arg0) {
+        mod.send('S_DESPAWN_COLLECTION', 2, {
+            gameId: uid_arg0
+        });
+    }
+
+    function Spawnitem1(item, degrees, maxRadius, times) {
+        for (var radius = 50; radius <= maxRadius; radius += 50) {
+            Spawnitem(item, degrees, radius, times);
+        }
+    }
+
+    function SpawnitemCircle(item, intervalDegrees, radius, times, shift_distance, shift_angle) {
+        if (shift_angle) {
+            bossCurAngle = (bossCurAngle - Math.PI) - (shift_angle * (Math.PI / 180));
+        }
+        if (shift_distance) {
+            bossCurLocation.x = bossCurLocation.x + shift_distance * Math.cos(bossCurAngle);
+            bossCurLocation.y = bossCurLocation.y + shift_distance * Math.sin(bossCurAngle);
+        }
+        for (var degrees = 0; degrees < 360; degrees += intervalDegrees) {
+            Spawnitem(item, degrees, radius, times);
+        }
     }
 }

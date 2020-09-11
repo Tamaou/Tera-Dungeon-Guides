@@ -2,5 +2,6 @@
 	"enabled": true,
 	"sendToParty": false,
 	"streamenabled": false,
-	"itemhelper": true
+	"itemhelper": true,
+	"sendToAlert": true
 }

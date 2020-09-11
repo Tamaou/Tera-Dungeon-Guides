@@ -1,11 +1,11 @@
 {
     "files": {
-        "BossList/aqSkillList.js": "83da233d31575912edd6dda7ca37785c8fe81abd63ecce58915d39cf580d7222",
-        "BossList/skillsList.js": "397521d7ba927db2b70762a9432bfb8a7e82493e52127b28437b0c8d989e9a3b",
-        "README.md": "86349c3e6371da8b130910c18d716362176bfeacfcc47887994e1c6d79da7e59",
-        "config.json": "7a4dcf2d5b344997132bf6700847e665019d7442ab21dd6fddae8da505354049",
-        "index.js": "1bd2cdb97a31e8aa67905ff979f733fe9afd17d043bb1dc1f0db2136592992ac",
-        "module.json": "7cdcb32bd3b539cb3e86090cd37172ea5811ef5d5edfebfcd5264b1c0b5738c0"
+        "README.md": "718754f5138693a5c15965edbf507ed5963004c94d8ee77eae8321b89efc0155",
+        "config.json": "f02c83dfef6ee4d3820581e5de603a9ec19646ce95b0b8718be74b58795233f6",
+        "index.js": "70fd0f531f5aaebafead4f7f1e299ba3875afbd6aa7c55dc0188c65a851ff35c",
+        "module.config.json": "fccfa1f9e19b11a6d58abbc07369f696ed9ea3873e263f6a2adf8e04d672d4d4",
+        "module.json": "7cdcb32bd3b539cb3e86090cd37172ea5811ef5d5edfebfcd5264b1c0b5738c0",
+        "skillsList.js": "3c5524ceceb4086b7835131695ae0abb7fcc9ad4796a9c298badd7360ecb3b36"
     },
     "defs": {
         "C_CHAT": 1,
@@ -17,7 +17,8 @@
         "S_DESPAWN_BUILD_OBJECT": 2,
         "S_DESPAWN_COLLECTION": 2,
         "S_DESPAWN_DROPITEM": 4,
-        "S_LOAD_TOPO": 3,
+        "S_DUNGEON_EVENT_MESSAGE": 2,
+        "S_LOGIN": [13,14],
         "S_SPAWN_BUILD_OBJECT": 2,
         "S_SPAWN_COLLECTION": 4,
         "S_SPAWN_DROPITEM": 8

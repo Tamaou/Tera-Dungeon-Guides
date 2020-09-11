@@ -8,6 +8,7 @@ All-In-One Dungeon Guides, Calls Out Boss Attacks. SCRIPTED BY TAMAOU
 Dungeon name | Status
 --- | ---
 Akalath Quarantine	|	Completed
+Bahaar's Sanctum	|	Completed
 Corrupted Skynest | Completed
 Corrupted Skynest (Hard) | Completed
 Draakon Arena | Testing
