@@ -1,6 +1,6 @@
 String.prototype.clr = function (hexColor) { return `<font color="#${hexColor}">${this}</font>` };
 
-let { DungeonInfo, KelsaikAction, HagufnaAction, UndyingWarlordAction, DraakonAction, HellgrammiteAction, GossamerRegentAction, NedraAction, PtakumAction, KylosAction, BahaarAction } = require('./skillsList');
+let { DungeonInfo, KelsaikAction, HagufnaAction, UndyingWarlordAction, DraakonAction, HellgrammiteAction, GossamerRegentAction, NedraAction, PtakumAction, KylosAction, AkalathTravanAction, AkalathKashirAction, BahaarAction } = require('./skillsList');
 const Vec3 = require('tera-vec3'),
     config = require('./config.json'),
     MarkerItem = 553,
