@@ -90,7 +90,7 @@ module.exports = {
         { id: 124, msg: 'Kick (IFRAME)' },
         { id: 125, msg: 'Kick (IFRAME)' },
         { id: 128, msg: 'Pheonix(WIPE)' },
-        { id: 129, msg: 'Wave Punch(Get Away)' },
+        { id: 129, msg: 'Back Wave Punch(Get Away)' },
         { id: 131, msg: 'Rhytmic Blows' },
         //  {id: 142:{msg:'Low Punch'},
         { id: 143, msg: 'Jump(Stun)' },
