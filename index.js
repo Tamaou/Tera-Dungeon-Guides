@@ -17,7 +17,7 @@ module.exports = function TeraDungeonGuides(mod) {
         itemhelper = config.itemhelper,
         msgcolour = config.msgcolour,
         sendToAlert = config.sendToAlert,
-        hooks = [],bossCurLocation,bossCurAngle,bossId = 0n,uid0 = 999999999n,uid1 = 899999999n,uid2 = 799999999n,skillid = 0,whichzone = null,whichmode = null,whichboss = 0,timeOut = 0,
+        hooks = [], bossCurLocation, bossCurAngle, bossId = 0n, uid0 = 999999999n, uid1 = 899999999n, uid2 = 799999999n, skillid = 0, whichzone = null, whichmode = null, whichboss = 0, timeOut = 0,
         //GLSH
         notice = true,
         power = false,
@@ -172,41 +172,41 @@ module.exports = function TeraDungeonGuides(mod) {
 
         // == CSNM / CSHM ==
         //Doomfire debuff
-        if (event.id == 30260001){
+        if (event.id == 30260001 || event.id == 31260001) {
             sendMessage("You now have Fire Debuff");
-            timer1 = mod.setTimeout(() =>{
+            timer1 = mod.setTimeout(() => {
                 alertMessage(" !! Warning !! Debuff ending in 50s")
             }, 40000);
 
-            timer2 = mod.setTimeout(() =>{
+            timer2 = mod.setTimeout(() => {
                 alertMessage(" !! Warning !! Debuff ending in 30s")
             }, 60000);
 
-            timer3 = mod.setTimeout(() =>{
+            timer3 = mod.setTimeout(() => {
                 alertMessage(" !! Warning !! Debuff ending in 15s")
             }, 75000);
 
-            timer4 = mod.setTimeout(() =>{
+            timer4 = mod.setTimeout(() => {
                 alertMessage(" !! Warning !! Debuff ending in 5s")
             }, 85000);
         }
 
         //Doomchill debuff
-        if (event.id == 30260002){
+        if (event.id == 30260002 || event.id == 31260002) {
             sendMessage("You now have Ice Debuff");
-            timer1 = mod.setTimeout(() =>{
+            timer1 = mod.setTimeout(() => {
                 alertMessage(" !! Warning !! Debuff ending in 50s")
             }, 40000);
 
-            timer2 = mod.setTimeout(() =>{
+            timer2 = mod.setTimeout(() => {
                 alertMessage(" !! Warning !! Debuff ending in 30s")
             }, 60000);
 
-            timer3 = mod.setTimeout(() =>{
+            timer3 = mod.setTimeout(() => {
                 alertMessage(" !! Warning !! Debuff ending in 15s")
             }, 75000);
 
-            timer4 = mod.setTimeout(() =>{
+            timer4 = mod.setTimeout(() => {
                 alertMessage(" !! Warning !! Debuff ending in 5s")
             }, 85000);
         }
@@ -234,7 +234,7 @@ module.exports = function TeraDungeonGuides(mod) {
         if (!mod.game.me.is(event.target)) return;
 
         // == CSN / CSHM ==
-        if(event.id == 30260001 || event.id == 30260002){
+        if ([30260001, 30260002, 31260001, 31260002].includes(event.id)) {
             mod.clearAllTimeouts();
         }
 
