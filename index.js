@@ -17,25 +17,22 @@ module.exports = function TeraDungeonGuides(mod) {
         itemhelper = config.itemhelper,
         msgcolour = config.msgcolour,
         sendToAlert = config.sendToAlert,
-        hooks = [],
-        bossCurLocation,
-        bossCurAngle,
-        bossId = 0n,
-        uid0 = 999999999n,
-        uid1 = 899999999n,
-        uid2 = 799999999n,
-        skillid = 0,
-        whichzone = null,
-        whichmode = null,
-        whichboss = 0,
+        hooks = [],bossCurLocation,bossCurAngle,bossId = 0n,uid0 = 999999999n,uid1 = 899999999n,uid2 = 799999999n,skillid = 0,whichzone = null,whichmode = null,whichboss = 0,timeOut = 0,
+        //GLSH
         notice = true,
         power = false,
         Level = 0,
         powerMsg = '',
+        //AQ
         myColor = null,
-        shining = false,
         TipMsg = '',
-        timeOut = 0;
+        //Bahaar
+        shining = false,
+        //CSN
+        timer1,
+        timer2,
+        timer3,
+        timer4;
 
     mod.command.add('dginfo', () => {
         mod.command.message(`enabled: ${enabled ? 'true'.clr('56B4E9') : 'false'.clr('E69F00')}.
@@ -172,12 +169,54 @@ module.exports = function TeraDungeonGuides(mod) {
         if (!enabled || !whichmode) return;
 
         if (!mod.game.me.is(event.target)) return;
-        // AQ
+
+        // == CSNM / CSHM ==
+        //Doomfire debuff
+        if (event.id == 30260001){
+            sendMessage("You now have Fire Debuff");
+            timer1 = mod.setTimeout(() =>{
+                alertMessage(" !! Warning !! Debuff ending in 50s")
+            }, 40000);
+
+            timer2 = mod.setTimeout(() =>{
+                alertMessage(" !! Warning !! Debuff ending in 30s")
+            }, 60000);
+
+            timer3 = mod.setTimeout(() =>{
+                alertMessage(" !! Warning !! Debuff ending in 15s")
+            }, 75000);
+
+            timer4 = mod.setTimeout(() =>{
+                alertMessage(" !! Warning !! Debuff ending in 5s")
+            }, 85000);
+        }
+
+        //Doomchill debuff
+        if (event.id == 30260002){
+            sendMessage("You now have Ice Debuff");
+            timer1 = mod.setTimeout(() =>{
+                alertMessage(" !! Warning !! Debuff ending in 50s")
+            }, 40000);
+
+            timer2 = mod.setTimeout(() =>{
+                alertMessage(" !! Warning !! Debuff ending in 30s")
+            }, 60000);
+
+            timer3 = mod.setTimeout(() =>{
+                alertMessage(" !! Warning !! Debuff ending in 15s")
+            }, 75000);
+
+            timer4 = mod.setTimeout(() =>{
+                alertMessage(" !! Warning !! Debuff ending in 5s")
+            }, 85000);
+        }
+
+        // == AQ ==
         if (event.id == 30231000 || event.id == 30231001) {
             myColor = event.id;
         }
 
-        //Bahaar
+        // == Bahaar ==
         if (event.id == 90442303) alertMessage('Healer should use [Regress] skill');
         if (event.id == 90442304) alertMessage('Stop the Boss using [Stun] skill');
 
@@ -193,7 +232,13 @@ module.exports = function TeraDungeonGuides(mod) {
         if (!enabled || !whichmode) return;
 
         if (!mod.game.me.is(event.target)) return;
-        // AQ
+
+        // == CSN / CSHM ==
+        if(event.id == 30260001 || event.id == 30260002){
+            mod.clearAllTimeouts();
+        }
+
+        // == AQ ==
         if (event.id == 30231000 || event.id == 30231001) {
             myColor = null;
         }
