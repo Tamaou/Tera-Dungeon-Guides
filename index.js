@@ -7,6 +7,7 @@ const Vec3 = require('tera-vec3'),
     MarkerItem1 = 2,
     MarkerItem2 = 88850,
     MarkerItem3 = 912,
+    MarkerItem4 = 537,
     BossID = [1000, 2000, 3000];
 
 module.exports = function TeraDungeonGuides(mod) {
@@ -17,7 +18,7 @@ module.exports = function TeraDungeonGuides(mod) {
         itemhelper = config.itemhelper,
         msgcolour = config.msgcolour,
         sendToAlert = config.sendToAlert,
-        hooks = [], bossCurLocation, bossCurAngle, bossId = 0n, uid0 = 999999999n, uid1 = 899999999n, uid2 = 799999999n, skillid = 0, whichzone = null, whichmode = null, whichboss = 0, timeOut = 0,
+        hooks = [], bossCurLocation, bossCurAngle, bossId = 0n, uid0 = 999999999n, uid1 = 899999999n, uid2 = 799999999n, skillid = 0, whichzone = null, whichmode = null, whichboss = 0, timer1, timer2, timer3, timer4,
         //GLSH
         notice = true,
         power = false,
@@ -27,12 +28,8 @@ module.exports = function TeraDungeonGuides(mod) {
         myColor = null,
         TipMsg = '',
         //Bahaar
-        shining = false,
-        //CSN
-        timer1,
-        timer2,
-        timer3,
-        timer4;
+        timeOut = 0,
+        shining = false;
 
     mod.command.add('dginfo', () => {
         mod.command.message(`enabled: ${enabled ? 'true'.clr('56B4E9') : 'false'.clr('E69F00')}.
@@ -175,19 +172,19 @@ module.exports = function TeraDungeonGuides(mod) {
         if (event.id == 30260001 || event.id == 31260001) {
             sendMessage("You now have Fire Debuff");
             timer1 = mod.setTimeout(() => {
-                alertMessage(" !! Warning !! Debuff ending in 50s")
+                alertMessage(" !! Warning !! Debuff ending in 50s");
             }, 40000);
 
             timer2 = mod.setTimeout(() => {
-                alertMessage(" !! Warning !! Debuff ending in 30s")
+                alertMessage(" !! Warning !! Debuff ending in 30s");
             }, 60000);
 
             timer3 = mod.setTimeout(() => {
-                alertMessage(" !! Warning !! Debuff ending in 15s")
+                alertMessage(" !! Warning !! Debuff ending in 15s");
             }, 75000);
 
             timer4 = mod.setTimeout(() => {
-                alertMessage(" !! Warning !! Debuff ending in 5s")
+                alertMessage(" !! Warning !! Debuff ending in 5s");
             }, 85000);
         }
 
@@ -195,19 +192,19 @@ module.exports = function TeraDungeonGuides(mod) {
         if (event.id == 30260002 || event.id == 31260002) {
             sendMessage("You now have Ice Debuff");
             timer1 = mod.setTimeout(() => {
-                alertMessage(" !! Warning !! Debuff ending in 50s")
+                alertMessage(" !! Warning !! Debuff ending in 50s");
             }, 40000);
 
             timer2 = mod.setTimeout(() => {
-                alertMessage(" !! Warning !! Debuff ending in 30s")
+                alertMessage(" !! Warning !! Debuff ending in 30s");
             }, 60000);
 
             timer3 = mod.setTimeout(() => {
-                alertMessage(" !! Warning !! Debuff ending in 15s")
+                alertMessage(" !! Warning !! Debuff ending in 15s");
             }, 75000);
 
             timer4 = mod.setTimeout(() => {
-                alertMessage(" !! Warning !! Debuff ending in 5s")
+                alertMessage(" !! Warning !! Debuff ending in 5s");
             }, 85000);
         }
 
@@ -279,20 +276,17 @@ module.exports = function TeraDungeonGuides(mod) {
                 SpawnitemCircle(MarkerItem, 10, 250, 9000);
                 SpawnitemCircle(MarkerItem, 10, 600, 9000);
             }
+            if (event.skill.id == 31031007 || event.skill.id == 32031007) {
+                timer1 = mod.setTimeout(() => {
+                    alertMessage('HA Attack soon...');
+                }, 65000);
+            }
         }
 
         //Draakon Arena, Draakon Arena Hard Mode
         if ([3102, 3202].includes(whichmode) && whichboss == 1) {
             if (event.stage != 0 || !(bossSkillID = DraakonAction.find(obj => obj.id == skillid))) return;
             sendMessage(bossSkillID.msg);
-            if ([121, 1244].includes(skillid)) {
-                bossCurLocation = event.loc;
-                bossCurAngle = event.w;
-                Spawnitem(MarkerItem, 110, 400, 9000);
-                Spawnitem(MarkerItem, 250, 400, 9000);
-                Spawnitem(MarkerItem, 110, 400, 9000);
-                Spawnitem(MarkerItem, 250, 400, 9000);
-            }
         }
 
         //Goosmer Vault Hard Mode , Hellgramite
@@ -416,27 +410,26 @@ module.exports = function TeraDungeonGuides(mod) {
             }
 
             if ([139, 141, 150, 152].includes(skillid)) {
-                Spawnitem(MarkerItem, 0, 25, 5000);
-                Spawnitem(MarkerItem, 0, 75, 5000);
-                Spawnitem(MarkerItem, 0, 125, 5000);
-                Spawnitem(MarkerItem, 0, 175, 5000);
-                Spawnitem(MarkerItem, 0, 225, 5000);
-                Spawnitem(MarkerItem, 0, 275, 5000);
-                Spawnitem(MarkerItem, 0, 325, 5000);
-                Spawnitem(MarkerItem, 0, 375, 5000);
-                Spawnitem(MarkerItem, 0, 425, 5000);
-                Spawnitem(MarkerItem, 0, 475, 5000);
-                Spawnitem(MarkerItem, 180, 25, 5000);
-                Spawnitem(MarkerItem, 180, 75, 5000);
-                Spawnitem(MarkerItem, 180, 125, 5000);
-                Spawnitem(MarkerItem, 180, 175, 5000);
-                Spawnitem(MarkerItem, 180, 225, 5000);
-                Spawnitem(MarkerItem, 180, 275, 5000);
-                Spawnitem(MarkerItem, 180, 325, 5000);
-                Spawnitem(MarkerItem, 180, 375, 5000);
-                Spawnitem(MarkerItem, 180, 425, 5000);
-                Spawnitem(MarkerItem, 180, 475, 5000);
-                SpawnThing(false, bossSkillID.sign_degrees, bossSkillID.sign_distance, 5000);
+                Spawnitem(MarkerItem4, 0, 25, 5000);
+                Spawnitem(MarkerItem4, 0, 75, 5000);
+                Spawnitem(MarkerItem4, 0, 125, 5000);
+                Spawnitem(MarkerItem4, 0, 175, 5000);
+                Spawnitem(MarkerItem4, 0, 225, 5000);
+                Spawnitem(MarkerItem4, 0, 275, 5000);
+                Spawnitem(MarkerItem4, 0, 325, 5000);
+                Spawnitem(MarkerItem4, 0, 375, 5000);
+                Spawnitem(MarkerItem4, 0, 425, 5000);
+                Spawnitem(MarkerItem4, 0, 475, 5000);
+                Spawnitem(MarkerItem4, 180, 25, 5000);
+                Spawnitem(MarkerItem4, 180, 75, 5000);
+                Spawnitem(MarkerItem4, 180, 125, 5000);
+                Spawnitem(MarkerItem4, 180, 175, 5000);
+                Spawnitem(MarkerItem4, 180, 225, 5000);
+                Spawnitem(MarkerItem4, 180, 275, 5000);
+                Spawnitem(MarkerItem4, 180, 325, 5000);
+                Spawnitem(MarkerItem4, 180, 375, 5000);
+                Spawnitem(MarkerItem4, 180, 425, 5000);
+                Spawnitem(MarkerItem4, 180, 475, 5000);
             }
 
             if ([139, 150].includes(skillid)) {
@@ -632,7 +625,7 @@ module.exports = function TeraDungeonGuides(mod) {
             mod.send('S_SPAWN_BUILD_OBJECT', 2, {
                 gameId: uid1,
                 itemId: MarkerItem1,
-                loc: curLocation,
+                loc: bossCurLocation,
                 w: r,
                 unk: 0,
                 ownerName: 'SAFE',
@@ -643,7 +636,7 @@ module.exports = function TeraDungeonGuides(mod) {
             mod.send('S_SPAWN_DROPITEM', 8, {
                 gameId: uid2,
                 item: MarkerItem2,
-                loc: curLocation,
+                loc: bossCurLocation,
                 amount: 1,
                 expiry: 600000,
                 owners: [{
