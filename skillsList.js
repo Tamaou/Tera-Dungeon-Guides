@@ -11,6 +11,7 @@ module.exports = {
         { zone: 9982, string: 'Welcome to ' + 'Grotto Of Lost Souls '.clr('56B4E9') + '[Hard Mode]'.clr('00FFFF') },                      //GLSHM
         { zone: 3023, string: 'Welcome to ' + 'Akalath Quarantine '.clr('56B4E9') },                                                      //AQ
         { zone: 9044, string: 'Welcome to ' + 'Bahaar Sanctum '.clr('56B4E9') },                                                          //Bahaar
+        { zone: 9739, string: 'Welcome to ' + 'Red Refuge '.clr('56B4E9') },                                                              //Red Refuge
     ],
 
     KelsaikAction: [
@@ -154,8 +155,8 @@ module.exports = {
     ],
 
     GossamerRegentAction: [
-        { id: 231, msg: 'OUT safe'},
-        { id: 232, msg: 'IN safe'},
+        { id: 231, msg: 'OUT safe' },
+        { id: 232, msg: 'IN safe' },
         { id: 108, msg: 'Back attack!' },
         { id: 235, msg: 'Debuffs' },
         { id: 230, msg: 'AOE' },
@@ -282,5 +283,50 @@ module.exports = {
         // {id: 310,msg: '3rd stun'},
         // {id: 311,msg: 'Wrath - Right Hand'},//311 120    311 119
         // {id: 312,msg: 'Wrath - Left Hand'},//312 119    312 120
-    ]
+    ],
+
+    KalaveseAction: [
+        // { id: 101, msg: 'Frontal Slam' },
+        // { id: 102, msg: 'Frontal Attack-Continuous' },
+        // { id: 103, msg: 'Frontal 2-Hit' },
+        { id: 105, msg: 'Front Poison Gas' },
+        { id: 107, msg: 'Jump > Slam' },
+        { id: 108, msg: 'Turn Around' },
+        { id: 112, msg: 'Back Poison Gas' },
+        { id: 302, msg: 'Spin > Jump' }
+    ],
+
+    ThromentumAction: [
+        // { id: 101, msg: 'Frontal Slam' },
+        // { id: 102, msg: 'Frontal Attack-Continuous' },
+        // { id: 103, msg: 'Frontal Slam' },
+        // { id: 104, msg: 'Double Frontal Slam' },
+        // { id: 105, msg: 'Disc Spin' },
+        // { id: 111, msg: 'Slam > Spin > Slam' },
+        { id: 115, msg: 'Dissemble > Spin' },
+        { id: 119, msg: 'Catapult' },
+        { id: 213, msg: 'Summoning Vortex' },
+        { id: 303, msg: 'Aim > Shoot' }
+    ],
+
+    ArgogAction: [
+        //{ id: 101, msg: '1-Slash' },
+        //{ id: 102, msg: '1-Slash' },
+        //{ id: 103, msg: 'Cross-Slash' },
+        { id: 107, msg: 'Barrage' },
+        { id: 115, msg: 'Shout(Short)' },
+        { id: 118, msg: 'Spin' },
+        //{ id: 119, msg: '2-Slash' },
+        { id: 165, msg: 'Turn-Around' },
+        { id: 167, msg: 'Barrage' },
+        { id: 172, msg: 'Charge > Thrust' },
+        { id: 175, msg: 'Shout(Short' },
+        { id: 178, msg: 'Spin' },
+        { id: 201, msg: 'Shout(Long)' },
+        //{ id: 209, msg: 'Teleport' },
+        { id: 302, msg: 'Targeting..' },
+        //{ id: 307, msg: '2-Slash' },
+
+
+    ],
 }

@@ -11,13 +11,14 @@ Akalath Quarantine	|	Completed
 Bahaar's Sanctum	|	Completed
 Corrupted Skynest | Completed
 Corrupted Skynest (Hard) | Completed
-Draakon Arena | Completed
-Draakon Arena (Hard) | Completed
+Draakon Arena | Testing
+Draakon Arena (Hard) | Testing
 Forbidden Arena [Hagufna] | To Be Improved
 Forbidden Arena [Undying Warlord] | Completed
 Forbidden Arena [Nightmare Undying Warlord]| Completed
 Grotto Of Lost Souls (Hard)	|	Completed
 Goosmer Vault (Hard)	|	Completed
+Red Refuge	|	Completed
 
 ## Commands
 Toolbox(/8) | Command description | Default

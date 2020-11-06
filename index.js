@@ -1,6 +1,7 @@
 String.prototype.clr = function (hexColor) { return `<font color="#${hexColor}">${this}</font>` };
 
-let { DungeonInfo, KelsaikAction, HagufnaAction, UndyingWarlordAction, DraakonAction, HellgrammiteAction, GossamerRegentAction, NedraAction, PtakumAction, KylosAction, AkalathTravanAction, AkalathKashirAction, BahaarAction } = require('./skillsList');
+let { DungeonInfo, KelsaikAction, HagufnaAction, UndyingWarlordAction, DraakonAction, HellgrammiteAction, GossamerRegentAction,
+    NedraAction, PtakumAction, KylosAction, AkalathTravanAction, AkalathKashirAction, BahaarAction, KalaveseAction, ThromentumAction, ArgogAction } = require('./skillsList');
 const Vec3 = require('tera-vec3'),
     config = require('./config.json'),
     MarkerItem = 553,
@@ -579,7 +580,22 @@ module.exports = function TeraDungeonGuides(mod) {
             }
 
         }
-        //End Bahaar
+
+        //Red Refuge, Kalavese
+        if (whichmode == 739 && whichboss == 1) {
+            if (event.stage != 0 || !(bossSkillID = KalaveseAction.find(obj => obj.id == skillid))) return;
+            sendMessage(bossSkillID.msg);
+        }
+        //Red Refuge, Thromentum
+        if (whichmode == 739 && whichboss == 2) {
+            if (event.stage != 0 || !(bossSkillID = ThromentumAction.find(obj => obj.id == skillid))) return;
+            sendMessage(bossSkillID.msg);
+        }
+        //Red Refuge, Argog
+        if (whichmode == 739 && whichboss == 3) {
+            if (event.stage != 0 || !(bossSkillID = ArgogAction.find(obj => obj.id == skillid))) return;
+            sendMessage(bossSkillID.msg);
+        }
     }
 
     function alertMessage(msg) {
