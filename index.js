@@ -9,7 +9,7 @@ const Vec3 = require('tera-vec3'),
     MarkerItem2 = 88850,
     MarkerItem3 = 912,
     MarkerItem4 = 537,
-    BossID = [1000, 2000, 3000];
+    BossID = [1000, 2000, 3000, 3001];
 
 module.exports = function TeraDungeonGuides(mod) {
     let isTank = true,
@@ -160,6 +160,7 @@ module.exports = function TeraDungeonGuides(mod) {
         if (event.templateId == BossID[0]) whichboss = 1;
         else if (event.templateId == BossID[1]) whichboss = 2;
         else if (event.templateId == BossID[2]) whichboss = 3;
+        else if (event.templateId == BossID[3]) whichboss = 4;
         else whichboss = 0;
     }
 
@@ -244,7 +245,7 @@ module.exports = function TeraDungeonGuides(mod) {
 
     function sActionStage(event) {
         if (!enabled || !whichmode || whichboss == 0) return;
-        if (event.templateId != BossID[0] && event.templateId != BossID[1] && event.templateId != BossID[2]) return;
+        if (event.templateId != BossID[0] && event.templateId != BossID[1] && event.templateId != BossID[2] && event.templateId != BossID[3]) return;
         skillid = event.skill.id % 1000;
         bossCurLocation = event.loc;
         bossCurAngle = event.w;
@@ -592,7 +593,7 @@ module.exports = function TeraDungeonGuides(mod) {
             sendMessage(bossSkillID.msg);
         }
         //Red Refuge, Argog
-        if (whichmode == 739 && whichboss == 3) {
+        if (whichmode == 739 && whichboss == 4) {
             if (event.stage != 0 || !(bossSkillID = ArgogAction.find(obj => obj.id == skillid))) return;
             sendMessage(bossSkillID.msg);
         }
