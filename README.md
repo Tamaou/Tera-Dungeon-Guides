@@ -19,9 +19,6 @@ Forbidden Arena [Nightmare Undying Warlord]| Completed
 Grotto Of Lost Souls (Hard)	|	Completed
 Goosmer Vault (Hard)	|	Completed
 Red Refuge	|	Completed
-Sky Cruiser Endeavor | In-Progress
-Sky Cruiser Endeavor (Hard)	| In-Progress
-Timescape	| In-Progress
 
 ## Commands
 Toolbox(/8) | Command description | Default
